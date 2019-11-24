@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://langue-data-visualisation.netlify.com"
 languageCode = "en-us"
 title = "Data Visualisation"
 theme = "hugo-lithium"
