@@ -1,0 +1,646 @@
+---
+title: "Cours 5"
+author: "Feryal WINDAL"
+date: 2019-10-07
+output: html_document
+---
+
+# Problèmatique.
+Vous avez été contacté par un magazine de finance et le directeur de l'édition vous a envoyé un fichier de données sur 500 entreprises et il vous demande de faire les graphiques suivants: 
+1- un nuage de points spécifique par industire où l'on peu visualiser les revenus, les dépenses et le le profit.
+2- un nuage de points incluant les tendances des différentes industries pour les variable dépenses et revenus.
+3- un Boxplot montrant la croissance par industie.
+
+
+Comme d'habitude, il faut définir son répertoire de travail.
+
+```{r}
+#setwd("~/Documents/DOMAINE-BIG-DATA/DATA-REPPORT-COM-VIS/COURS-DATA-REPPORT/COURS5")
+```
+
+Nous allons charger notre jeu de données qui se trouve déjà dans le répertoire de travail.
+Nous pouvons avoir un aperçu des données avec la fonction head
+```{r}
+fin=read.csv("Futur500.csv", head=TRUE, sep=",")
+head(fin)
+```
+Nous pouvons également accéder à la queue du fichier (les dernières lignes) avec la fonction tail.
+```{r}
+tail(fin)
+```
+
+
+
+Nous pouvons également lancer la fonction summary sur mon jeu de données afin d'obtenir une petite statistique.
+```{r}
+summary(fin)
+```
+Autre fontion qui nous permet de voir une vision d'ensemble des données est la fonction str 
+```{r}
+str(fin)
+```
+
+Comme vous pouvez le remarquer, la fonction str (pour structure du data frame) nous indique que notre jeu de données est bien un data frame, que nous avons 500 observations et 11 variables. Une partie des variables est listée avec comme indication pour chacune, le type de la données, le nombre de modalités, les noms des premières modalités, et les fréquences associées si c'est du type factor. Par exemple pour la varaible "Name", c'est bien le type factor  500 niveaux. Ceci est normal puisque nous avons 500 ligne.
+Prenons maintenant la variable Industry, elle est également de type factor, elle a 8 modalités (8 levels). On peut les visualiser dans le summary.
+la première modalité est "" ce qui signifie; vide, deuxième est "Construction" et ainsi de suite. Nous remarquons également qu'il y a une série de chiffres. Ces chiffres représentent un codage en langage R des modalités. Par exemple le chiffre 8 représente la modatlité vide, le chiffre 6, représente la modalité "Construction" et ainsi de suite.
+
+Sinon regardons maintenant le reste des variables de ce fichier. 
+Prenons pour commencer la variable "Inception". Elle indique les années de création de l'entreprise. Dans ce qui suit, nous n'avons pas besoin de faire des opérations arithmétiques sur les années. Même chose avec la variable "ID" nous n'avons pas besoin de faire des opérations arithmétiques. Nous allons donc transformer ces deux variables en factor.
+
+```{r}
+fin$ID<-factor(fin$ID)
+str(fin)
+```
+
+
+```{r}
+
+fin$Inception<-factor(fin$Inception)
+summary(fin)
+str(fin)
+```
+
+Une fois la transformation de la variable Inception en factor nous pouvons remarquer en executant la fonction summary, les fréquences de chaque modalité. Exemple en 2011 nous avons 93 entreprises qui ont été créées.
+
+
+# Les erreurs avec les factors 
+
+```{r}
+a<-c("12", "13", "14", "12", "12")
+a
+typeof(a)
+```
+```{r}
+b<-as.numeric(a)
+typeof(b)
+```
+
+Ceci est la meilleure façon de convertire des caracètes en numérique.
+
+Maintenant regardons comment convertir un factor en numeric.
+
+```{r}
+z<-factor(c("12", "13", "14", "12", "12"))
+z
+```
+
+Comme vous pouvez le remarquer, z est un vecteur avec 3 levels , 12, 13 et 14. Ici, R reconnait ces chiffres comme des catégories ou des modalités. Cela peut être très déroutant et mener à la confusion. 
+Premier reflexe est de convertir z en un vecteur numeric.
+Nous allons essayer de faire la même chose que précédemment avec le vecteur a et b en utilisant la fonction as.numeric.
+```{r}
+y<-as.numeric(z)
+y
+typeof(y)
+
+```
+
+Nous obtenons ici un vecteur numeric avec les valeurs 1 2 3 1 1, si l'on regarde le type de y, nous obtenons bien un type double comme précédemment.
+Nous avons fait les mêmes opérations qu'avec a et b mais nous n'obtenons pas notre vecteur 12 13 14 12 12.
+Ce qui s'est passé, est que nous avons pris en compte la factorisation de la variable plutot que les facteurs (ou modalités) eux mêmes.
+A vrai dire, il attribu la valeur 1 pour la modalité 12, la valeur 2 pour la modalité 13 et la valeur 3 pour la modalité 14.
+Si l'on regarde le type de z : 
+```{r}
+typeof(z)
+```
+
+z est bien un entier puisqu'il attribue des valeurs entières aux modalités.
+Quand nous convertissons z en numéric nous obtenons le vecteur 1 2 3 1 1.
+Ceci est une des erreurs les plus commises en programmation.
+Pour éviter cette erreur, il faut convertit notre vecteur en caractère et ensuite en numeric 
+```{r}
+x=as.numeric(as.character(z))
+typeof(x)
+x
+```
+
+Revenons à notre jeu de données. Nous allons maintenant transformer les variables "Revenue", "Expenses" et "Growth" qui sont des factors en variables numériques.
+C'est varaibles sont identifiées par R comme étant des factors.
+Par exemple Revenue contient le symbole "$" et des "," . Or R converti automatiquement ce type de données en factor puisqu'il ne sait pas les reconnaitre en numérique.
+Pareil pour la variable Expenses ou nous pouvons remarquer également des "," mais aussi le mot "Dollars".
+Concernant la variable Growth, il s'agit du caractère "%".
+
+```{r}
+str(fin)
+```
+
+Question importante, comment allons nous supprimer ces caractères et transformer nos variables en numériques ?
+
+Avant de répondre à cette question, nous allons nous intéresser à la variable "Profit". Elle est de type int et c'est parfait.
+Pour illustrer ce que nous avons étudié depuis le début, nous allons transformer cette variable en factor et ensuite la retransformer en numéric (int).
+
+```{r}
+fin$Profit<-factor(fin$Profit)
+```
+
+```{r}
+str(fin)
+```
+
+```{r}
+head(fin)
+```
+On remarque ici que les données de la variable "Profit" sont les mêmes qu'avant sa transformation en factor.
+
+Essayons maintenant de transformer cette variable en numérique:
+```{r}
+fin$Profit<-as.numeric(fin$Profit)
+```
+
+```{r}
+head(fin)
+```
+
+
+```{r}
+str(fin)
+```
+
+Comme nous pouvons le voir, Profit est bien de type numeric mais nous n'obtenons plus les mêmes valeurs. 342 au lieu de 8553827...
+Comme nous l'avions vu dans l'exemple précedent avec les variables z et y, R code les modalités ou les caractéristiques en leur attribuant des codes ou des valeurs.
+
+```{r}
+fin=read.csv("Futur500.csv", head=TRUE, sep=",")
+fin$ID<-factor(fin$ID)
+fin$Inception<-factor(fin$Inception)
+str(fin)
+```
+
+
+# Fonctions sub() et gsub()
+```{r}
+?gsub
+```
+
+Comme nous pouvons lire dans le descriptif de la fonction sub(), cette fonction, prend comme argument un pattern l'élément que nous souhaitons modifier, le remplacement est la structure que nous voulons mettre et x est la variable ou l'on souhaite faire ce remplacement.
+```{r}
+fin$Expenses<-gsub(" Dollars", "", fin$Expenses)
+fin$Expenses<-gsub(",","", fin$Expenses)
+head(fin)
+str(fin)
+```
+Comme on peut le remarquer maintenant la variable Expenses est de type chr. Nous reviendrons par la suite pour terminer la transformation.
+
+Interéssons nous à présent à la variable "Revenue" qui est un peu différente que "Expenses".
+```{r}
+fin$Revenue<-gsub("$","",fin$Revenue)
+head(fin)
+```
+
+Comme nous pouvons le remarquer, avec cette écriture, il ne se passe rien. Parce que \$ est un caractère spécial dans R. Pour que le langage R puisse intérepéter que nous souhaitons rechercher la séquence \$ dans la chaine de caractère, nous devons utiliser le symbole \.
+```{r}
+fin$Revenue<-gsub("\\$","",fin$Revenue)
+fin$Revenue<-gsub(",","",fin$Revenue)
+head(fin)
+str(fin)
+```
+
+```{r}
+fin$Growth<-gsub("%","",fin$Growth)
+head(fin)
+str(fin)
+```
+
+Comme nous pouvons le remarquer les 3 variables sont de type caractère, nous pouvons donc les convertir facilement en type numerique.
+
+```{r}
+fin$Expenses<-as.numeric(fin$Expenses)
+fin$Revenue<-as.numeric(fin$Revenue)
+fin$Growth<-as.numeric(fin$Growth)
+head(fin)
+str(fin)
+```
+
+
+# Les données manquantes 
+Vous serez plus jamais confrontés aux données manquantes. 
+Cela est du à cause de certaines erreurs de saisie ou de manipulation des données.
+Pour remédier a cela, plusieurs options s'offrent à nous :
+1- Prédir les données manquantes avec 100% de précision.
+Par exemple vous pouvez remplir des champs si vous êtes sur de l'information. Dans notre exemple, si nous avons l'information sur la recette et les dépenses, il serait simple de déduir le profit. 
+Ou si nous avons le nom d'une ville et qu'il nous manque l'état (pour les USA) le département, il est aussi facile de remplir l'information manquante.
+
+2- Laisser la cellule (ou l'information) vide.
+C'est dans le cas ou le champ ou la variable n'est pas importante, dans ce cas, avoir des informations manquantes ce n'est pas important.
+Il existe néanmoins des algorithmes qui permettent de gérer ces champs vide.
+
+3- supprimer la ligne entière.
+C'est une méthode qui n'est pas recommandée puisque notre étude se retrouve avec un petit échantillon.
+Mais des fois nous n'avons que cette option.
+
+4-Replacer avec la moyenne ou la médiane 
+C'est la méthode la plus populaire en data science. Il est préférable de remplacer avec la médiane que la moyenne puisque la médiane n'est pas affectée par les valeurs extrèmes.
+
+5- Remplir en utilisant les modèles prédictifs .
+Nous pouvons explorer la corrélation ou la régression entre deux variables, définir la droite et ainsi les valeurs manquantes.
+
+# Les valeurs NA
+Je vous invite à lire sur NA en tapant la commande 
+```{r}
+?NA
+```
+Comme vous pouvez le lire, il s'agit d'une variable logique.
+Prenons un exemple : 
+Soit la proposition suivante :
+Jean a une voiture .
+Cette proposition est soit vraie, soit fausse et si l'on en sait pas en R, c'est du NA.
+
+```{r}
+TRUE #1
+FALSE #0
+NA
+```
+
+```{r}
+TRUE == FALSE
+```
+
+```{r}
+TRUE==5
+```
+
+```{r}
+TRUE==1
+```
+
+```{r}
+FALSE==4
+```
+
+```{r}
+FALSE==FALSE
+```
+
+```{r}
+FALSE==0
+```
+
+```{r}
+NA==TRUE
+```
+
+```{r}
+NA==FALSE
+```
+
+```{r}
+NA==15
+```
+
+```{r}
+15==NA
+```
+
+```{r}
+NA==NA
+```
+NA nous indique que nous comparons une valeur manquante à quelque chose, or nous ne connaissant pas la valeur de la valeur manquante. C'est pour cette raison que nous obtenons NA à chaque fois.
+
+```{r}
+head(fin,24)
+```
+
+```{r}
+complete.cases(fin)
+```
+ La fonction complete.cases(fin) va parcourir le fichier et renvoyer un vecteur avec TRUE et FALSE.
+ TRUE indique que la ligne n'a pas de données manquantes. FALSE indique la ligne avec des données manquantes.
+```{r}
+fin[complete.cases(fin),]
+
+```
+
+Cette instruction retourne un data frame avec seulement les lignes ou il n'y a pas de données manquantes.
+Si l'on souhaite plutot un data frame avec que les données manquantes: 
+```{r}
+fin[!complete.cases(fin),]
+```
+
+Nous pouvons comparer ce résultat avec le fichier excel et constater qu'il y a plus de 6 lignes avec des données manquantes, simplement complete.cases va chercher les lignes avec NA et ne comptabilise pas les lignes où les champs sont vides.
+
+Pour remédier à ce problème nous devons revenir dès le début avec notre fonction read.csv.
+
+```{r}
+fin=read.csv("Futur500.csv", head=TRUE, sep=",", na.strings = c(""))
+fin$ID<-factor(fin$ID)
+fin$Inception<-factor(fin$Inception)
+fin$Expenses<-gsub(" Dollars", "", fin$Expenses)
+fin$Expenses<-gsub(",","", fin$Expenses)
+fin$Revenue<-gsub("\\$","",fin$Revenue)
+fin$Revenue<-gsub(",","",fin$Revenue)
+fin$Growth<-gsub("%","",fin$Growth)
+fin$Expenses<-as.numeric(fin$Expenses)
+fin$Revenue<-as.numeric(fin$Revenue)
+fin$Growth<-as.numeric(fin$Growth)
+str(fin)
+```
+```{r}
+fin[!complete.cases(fin),]
+```
+na.strings = c("") nous avons indiqué avec cette instruction de remplacer les champs vides avec NA.
+Comme nous pouvons le remarquer, les champs vides sont remplacés par NA.
+Nous pouvons rencontrer la notation <NA>. Quelle différence avec NA ?
+La réponse est simple, quand il s'agit de factor c'est-à-dire, une variable avec des modalités, on utilise <NA> sinon si c'est numérique nous trouverons la notation NA.
+
+# Filtre avec which()
+```{r}
+head(fin)
+```
+
+Imaginons que je souhaite selectionner les lignes qui contiennent un revenue de valeur de 9746272	.
+```{r}
+fin$Revenue==9746272		
+```
+
+Nous obtenons un vecteur avec des valeur True s'il ya matching et False sinon.
+Nous avons également la valeur NA, cela implique que notre langage a comparé la valeur 9746272	 à la valeur NA et comme nous l'avions précisé plus haut, cela nous retourne NA.
+
+
+Si on souhaite filtrer que les lignes qui match avec la valeur de 9746272	: 
+```{r}
+fin[fin$Revenue==9746272	, ]
+```
+Comme on peut le remarquer, on obtient 3 lignes. Deux lignes sont à NA, cela implique que quand R match la valeur 9746272	 avec une valeur NA il donne NA, ceci n'est pas FALSE ni TRUE mais NA.
+```{r}
+9746272	==NA
+```
+Avec which, nous pouvons obtenir la ligne exacte avec la valeur demandée. Which ne comptabilise plus les valeurs NA.
+```{r}
+which(fin$Revenue==9746272	)
+```
+Si je souhaite visualiser la ligne dont le revenue = 9746272	:
+```{r}
+fin[which(fin$Revenue==9746272), ]
+# petit rappel, si on souhaite les lignes 3,4,5 d'un data frame l'instruction est la suivante 
+#fin[c(3,4,5),]
+
+```
+Considérons un autre exemple avec la variable Emplpyees. 
+Nous allons chercher les lignes ou les entreprises avec un effectif de 45 employés.
+
+```{r}
+fin[fin$Employees==45,]
+```
+
+Si l'on souhaite que les lignes sans les NA: 
+```{r}
+fin[which(fin$Employees==45),]
+```
+
+
+# Filtre avec is.na()
+
+```{r}
+head(fin,24)
+```
+
+Imaginons que l'on souhaite récupérer les lignes dont la variable Expenses est à NA. 
+Premier reflexe est d'écrire de la façon suivante :
+```{r}
+fin$Expenses==NA
+```
+Ou bien en version data frame 
+
+```{r}
+fin[fin$Expenses==NA,]
+```
+
+Comme nous l'avions précéisé, on ne peut pas comparer avec NA.
+
+Nous allons introduire la fonction is.na().
+```{r}
+a<-c(1,24,456,NA, 76,33,NA)
+is.na(a)
+```
+
+is.na() indique par TRUE lorsque le matching avec NA a lieu.
+
+```{r}
+is.na(fin$Expenses)
+
+```
+
+
+```{r}
+fin[is.na(fin$Expenses),]
+```
+
+# Supprimer les données manquantes:
+Nous souhaitons dans ce qui suit supprimer les deux lignes correspondantes aux deux champs manquants de la variable Industry.
+```{r}
+fin_backup<-fin
+fin[!complete.cases(fin),] # qui indique toutes les lignes avec au moins une valeur NA.
+
+```
+
+```{r}
+fin[is.na(fin$Industry),]
+```
+
+Cette instruction nous indique que c'est les lignes 14 et 15 qui ont des champs NA au niveau de la variable Induystry.
+
+Maintenant si l'on souhaite supprimer ces deux lignes du data frame, rien de plus facile :
+```{r}
+fin[!is.na(fin$Industry),] #opposé
+```
+
+```{r}
+fin<-fin[!is.na(fin$Industry),]
+```
+
+```{r}
+head(fin,24)
+```
+
+On peut remarquer que les lignes 14 et 15 ont bien été supprimées.
+
+# Réinitialisation de l'index du data frame: 
+Comme nous pouvons le remarquer, nous avons supprimer les deux lignes mais les numéros de lignes restent inchangés. 
+Pour changer les numéros de ligne 
+```{r}
+rownames(fin)<-1:nrow(fin)
+head(fin,25)
+tail(fin, 25)
+```
+
+Autre façon de le faire est 
+```{r}
+fin<-fin_backup
+fin<-fin[!is.na(fin$Industry),]
+rownames(fin)<-NULL
+head(fin,25)
+tail(fin, 25)
+```
+
+# Remplacer les valeurs manquantes
+Dans cette partie nous allons remplacer les valeurs manquantes.
+Par exemple nous souhaitons remplir les champs manquants de la variable "State"
+
+```{r}
+fin[!complete.cases(fin),]
+```
+
+```{r}
+fin[is.na(fin$State),]
+```
+
+```{r}
+fin[is.na(fin$State) & fin$City=="New York",]
+```
+
+```{r}
+fin[is.na(fin$State) & fin$City=="New York","State"]<-"NY"
+
+```
+
+```{r}
+fin[c(11,377),]
+```
+
+Nous pouvons faire la même chose avec san fransisco
+
+```{r}
+fin[is.na(fin$State),]
+fin[is.na(fin$State) & fin$City=="San Francisco",]
+fin[is.na(fin$State) & fin$City=="San Francisco","State"]<-"CA"
+fin[c(82,265),]
+```
+
+```{r}
+fin[!complete.cases(fin),]
+```
+
+On peut remarquer que le nombre de ligne dans avec des valeurs NA diminue de plus en plus.
+
+# Replacer NA avec Mediane 
+Dans cette partie, nous allons nous concentrer sur la variable Employees et nous allons filtrer selon le type d'industrie, ici l'entreprise Greenfax est du type Retail (nous pouvons le faire pour trouver la valeur manquante selon la variable City ou bien la variable Inception. Seulement selon le type de l'industrie semble le plus représentatif. Néanmoins, comme nous pouvons le remarquer, nous ne pouvons pas approximer la valeur manquante par la moyenne puisque cela n'a aucun sens dans la mesure ou nous avons des valeurs extrèmes (1 et 7125). La médiane semble l'aternative la plus plausible puisqu'elle n'est pas affectée par ces valeurs.
+```{r}
+median(fin[, "Employees"])
+```
+```{r}
+median(fin[, "Employees"],na.rm=TRUE)
+```
+
+```{r}
+median(fin[fin$Industry=="Retail", "Employees"],na.rm=TRUE)
+med_empl_retail <-median(fin[fin$Industry=="Retail", "Employees"],na.rm=TRUE)
+```
+
+Nous allons maintenant attribuer cette valeur à la variable Employees de la ligne 3.
+
+```{r}
+fin[is.na(fin$Employees)&fin$Industry=="Retail", "Employees"]<-med_empl_retail
+fin[3,]
+```
+
+Nous allons faire la même chose pour le type d'industie "Financial services"
+
+```{r}
+median(fin[fin$Industry=="Financial Services", "Employees"],na.rm=TRUE)
+med_empl_financial <-median(fin[fin$Industry=="Financial Services", "Employees"],na.rm=TRUE)
+```
+
+
+```{r}
+fin[is.na(fin$Employees)&fin$Industry=="Financial Services", "Employees"]<-med_empl_financial
+fin[330,]
+```
+
+```{r}
+fin[!complete.cases(fin),]
+```
+ 
+ Nous allons continuer à remplacer les valeurs NA dans la variable "Growth".
+```{r}
+med_growth_constru<-median(fin[fin$Industry == "Construction","Growth"], na.rm=TRUE)
+med_growth_constru
+fin[is.na(fin$Growth)&fin$Industry=="Construction", "Growth"]<- med_growth_constru
+fin[8,]
+```
+ Nous allons faire la même chose pour les variables "Revenue" et "Expenses"
+ 
+```{r}
+med_rev_constru<-median(fin[fin$Industry == "Construction","Revenue"], na.rm=TRUE)
+med_rev_constru
+fin[is.na(fin$Revenue)&fin$Industry=="Construction", "Revenue"]<- med_rev_constru
+fin[8,]
+
+```
+
+```{r}
+med_exp_constru<-median(fin[fin$Industry == "Construction","Expenses"], na.rm=TRUE)
+med_exp_constru
+fin[is.na(fin$Expenses)&fin$Industry=="Construction", "Expenses"]<- med_exp_constru
+fin[8,]
+
+```
+# Remarque importante :
+Comme vous pouvez le remarquer dans Expenses, nous ne devons pas déduire des valeurs sans vérifier. En effet, la ligne IT Services a bien NA dans Expenses mais nous pouvons la déduire autrement qu'en utilisant la médiane.
+Pour en déduire ces valeures monquante nous devons utiliser les formules suivantes : 
+Revenue- Expenses = Profit
+Expenses = Revenue - Profit 
+
+
+```{r}
+fin[!complete.cases(fin),]
+```
+
+
+```{r}
+fin[is.na(fin$Profit), "Profit"] <- fin[is.na(fin$Profit), "Revenue"] - fin[is.na(fin$Profit), "Expenses"]
+```
+
+
+```{r}
+fin[c(8,42),]
+```
+
+```{r}
+fin[!complete.cases(fin),]
+```
+
+```{r}
+fin[is.na(fin$Expenses), "Expenses"] <- fin[is.na(fin$Expenses), "Revenue"] - fin[is.na(fin$Expenses), "Profit"]
+```
+
+```{r}
+fin[15,]
+```
+
+```{r}
+fin[!complete.cases(fin),]
+```
+
+# Visualisation 
+
+```{r}
+library(ggplot2)
+```
+
+Pour commencer nous allons visualiser le nuage de point représentant les variables Revenue, Expenses et Profit 
+
+```{r}
+p<-ggplot(data=fin)+ aes(x= Revenue, y= Expenses, size= Profit,colour= Industry)+ geom_point()
+p
+```
+
+
+```{r}
+p<-ggplot(data=fin)+ aes(x= Revenue, y= Expenses,colour= Industry)+ geom_point()
+p
+p+geom_smooth(fill= NA, size = 1)
+```
+
+geom_smooth permet de dessiner les courbes de tendance. 
+
+# Boxplot
+```{r}
+f<-ggplot(data=fin)+ aes(x= Industry, y= Growth, colour = Industry)+ geom_boxplot(size=1)
+f
+```
+
+
+```{r}
+f+geom_jitter()+geom_boxplot(size=1, alpha=0.5, outlier.colour = NA)
+```
+
+

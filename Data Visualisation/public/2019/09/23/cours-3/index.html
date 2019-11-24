@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.59.1" />
+
+
+<title>Cours  3 - Data Visualisation</title>
+<meta property="og:title" content="Cours  3 - Data Visualisation">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/rstudio/blogdown">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/rstudio">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">4 min read</span>
+    
+
+    <h1 class="article-title">Cours  3</h1>
+
+    
+    <span class="article-date">2019-09-23</span>
+    
+
+    <div class="article-content">
+      
+
+
+<p>#####ggplot2</p>
+<p>Dans un premier point, il est nécessaire de charger le package ggplot2
+pour cela nous allons comprendre d’abord la structure d’un graphique sous ggplot2.
+Déjà, pour faire un graphique, nous allons additionner un ensemble de fonctions.
+un simple graphique sous ggplot2 aura besoin d’une fonction ggplot, une aesthétic, de fonction geom, fonction facet, fonction thème …
+selon le besoin nous pouvons définir le graphique que nous souhaitons.
+Connaitre toutes les fonctionnalités de ggplot2 c’est très bien mais vous trouverai de la documentation facilement sur Github</p>
+<pre class="r"><code>library(&quot;ggplot2&quot;)</code></pre>
+<div id="plot-data-aesthetics-geometry" class="section level1">
+<h1>Plot = data + aesthetics + Geometry</h1>
+<p>Reprenons l’example du jeu de données Iris :
+nous allons faire notre premier graphique où on va représenter sur l’axe des abscisses la longueur du pétal et sur l’axe des ordonnées la largeur du pétal.
+Donc le graphique g je vais d?finir une fonction ggplot qui prend en argument mon jeu de donn?e iris, et je peux ?galment d?finir la fonction aes pour aesth?tique o? j’indique quelle colonne prendre pour l’axe des x et quelle colonne prendre pour l’axe y.
+Ensuite, il faut repr?senter les ppoints et la, il faut appeler la fonction geom_point()
+ensuite je lance g pour voir le graphique.</p>
+<pre class="r"><code>library(&quot;ggplot2&quot;)
+data(&quot;iris&quot;)
+donnee_Iris=read.csv(&quot;iris.csv&quot;)
+donnee_Iris=read.table(&quot;iris.csv&quot;, header = T, sep=&quot;,&quot;, row.names = 1) #row.names permet de d?finir la premi?re colonnes comme nom de lignes.
+View(donnee_Iris)
+g&lt;-ggplot(donnee_Iris, aes(x=Petal.Length, y=Petal.Width))</code></pre>
+<p>Ici je crée un nouveau graphique, je vais l’appeler g</p>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width))
+g&lt;-g+geom_point()
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Comme nous pouvons le remarquer ici, le graphique est vraiment basic et sans aucune couleur
+nous pouvons l’interpr?ter mais ce n’est pas suffisant</p>
+</div>
+<div id="couleur-selon-lespce-nous-allons-mettre-des-couleurs-selon-lespce." class="section level1">
+<h1>couleur selon l’esp?ce (nous allons mettre des couleurs selon l’esp?ce.)</h1>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Species))+geom_point()</code></pre>
+</div>
+<div id="couleurs-et-formes-des-points-diffrentes-selon-lespce" class="section level1">
+<h1>couleurs et formes des points diff?rentes selon l’esp?ce</h1>
+<p>shape c’est la forme.</p>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Species, shape=Species))+geom_point()
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="modifier-le-fond-de-notre-graphique" class="section level1">
+<h1>modifier le fond de notre graphique</h1>
+<pre class="r"><code>g&lt;-g+theme_minimal()
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="modifier-taille-des-points" class="section level1">
+<h1>modifier taille des points</h1>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Species, shape=Species))+geom_point(size=3)+theme_minimal()
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="crer-un-gradient-de-couleur" class="section level1">
+<h1>cr?er un gradient de couleur</h1>
+<p>j’ajoute ici la fonction scale_color_gradient de la couleur</p>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Petal.Length, shape=Species))+geom_point(size=3)+theme_minimal()
+g&lt;-g+scale_color_gradient(low=&quot;green&quot;, high=&quot;orange&quot;)
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="modifier-la-position-de-la-lgende-bottom-left-right" class="section level1">
+<h1>modifier la position de la l?gende (bottom, left, right)</h1>
+<pre class="r"><code>g&lt;-g+theme(legend.position=&quot;top&quot;)
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="modifier-couleur-texture-du-titre-de-la-lgende" class="section level1">
+<h1>modifier couleur, texture du titre de la l?gende</h1>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Petal.Length, shape=Species))+geom_point(size=3)
+g&lt;-g+scale_color_gradient(low=&quot;green&quot;, high=&quot;orange&quot;)+theme_minimal()+theme(legend.title=element_text(colour=&quot;black&quot;, size=15, face=&quot;bold&quot;))
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="modifier-couleur-texture-taille-des-labels-de-ma-lgende" class="section level1">
+<h1>modifier couleur, texture, taille des labels de ma l?gende</h1>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Petal.Length, shape=Species))+geom_point(size=3)
+g&lt;-g+scale_color_gradient(low=&quot;green&quot;, high=&quot;orange&quot;)+theme_minimal()+theme(legend.title=element_text(colour=&quot;black&quot;, size=15, face=&quot;bold&quot;))
+g&lt;-g+theme(legend.text=(element_text(colour=&quot;blue&quot;, size=10, face=&quot;bold.italic&quot;)))
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="steelblue" class="section level1">
+<h1>steelblue</h1>
+</div>
+<div id="ajouter-un-cadre-notre-lgende" class="section level1">
+<h1>ajouter un cadre ?? notre l?gende</h1>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Petal.Length, shape=Species))+geom_point(size=3)
+g&lt;-g+scale_color_gradient(low=&quot;green&quot;, high=&quot;orange&quot;)+theme_minimal()+theme(legend.title=element_text(colour=&quot;red&quot;, size=15, face=&quot;bold&quot;))
+g&lt;-g+theme(legend.text=(element_text(colour=&quot;blue&quot;, size=8, face=&quot;bold.italic&quot;)))
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="modification-des-noms-des-axes-et-ajout-dun-titre-au-graphique" class="section level1">
+<h1>modification des noms des axes et ajout d’un titre au graphique</h1>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Petal.Length, shape=Species))+geom_point(size=3)
+g&lt;-g+scale_color_gradient(low=&quot;green&quot;, high=&quot;orange&quot;)+theme_minimal()+theme(legend.title=element_text(colour=&quot;steelblue&quot;, size=9, face=&quot;bold&quot;))
+g&lt;-g+theme(legend.text=(element_text(colour=&quot;blue&quot;, size=8, face=&quot;bold.italic&quot;)))
+g&lt;-g+xlab(&quot;Longueur des p?tales&quot;)+ylab(&quot;Largeur des p?tales&quot;)+ggtitle(&quot;Longueur des p?tales en fonction de largeur des p?tales&quot;)
+g&lt;-g+theme(plot.title=element_text(colour=&quot;steelblue&quot;, size=15, face=&quot;bold&quot;))
+g&lt;-g+theme(axis.title=element_text(colour=&quot;steelblue&quot;, size=10, face=&quot;bold&quot;))
+g&lt;-g+theme(axis.text=element_text(colour=&quot;steelblue&quot;, size=10, face=&quot;bold&quot;, angle=45))
+#g&lt;-g+theme(axis.line=element_line(colour=&quot;steelblue&quot;, size=2, linetype=&quot;dotted&quot;))
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="modification-des-noms-des-axes-et-ajout-dun-titre-au-graphique-1" class="section level1">
+<h1>modification des noms des axes et ajout d’un titre au graphique</h1>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Petal.Length, shape=Species))+geom_point(size=3)
+g&lt;-g+scale_color_gradient(low=&quot;green&quot;, high=&quot;orange&quot;)+theme_minimal()+theme(legend.title=element_text(colour=&quot;steelblue&quot;, size=9, face=&quot;bold&quot;))
+g&lt;-g+theme(legend.text=(element_text(colour=&quot;blue&quot;, size=8, face=&quot;bold.italic&quot;)))
+g&lt;-g+xlab(&quot;Longueur des p?tales&quot;)+ylab(&quot;Largeur des p?tales&quot;)+ggtitle(&quot;Longueur des p?tales en fonction de largeur des p?tales&quot;)
+g&lt;-g+theme(plot.title=element_text(colour=&quot;steelblue&quot;, size=15, face=&quot;bold&quot;))
+g&lt;-g+theme(axis.title=element_text(colour=&quot;steelblue&quot;, size=10, face=&quot;bold&quot;))
+g&lt;-g+theme(axis.text=element_text(colour=&quot;steelblue&quot;, size=10, face=&quot;bold&quot;, angle=45))
+#g&lt;-g+theme(axis.line=element_line(colour=&quot;steelblue&quot;, size=2, linetype=&quot;dotted&quot;))
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+<div id="facet_wrap---combiner-des-graphiques" class="section level1">
+<h1>facet_wrap -&gt; combiner des graphiques</h1>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Petal.Length, shape=Species))+geom_point(size=3)
+g&lt;-g+scale_color_gradient(low=&quot;blue&quot;, high=&quot;red&quot;)+theme_minimal()+theme(legend.title=element_text(colour=&quot;steelblue&quot;, size=9, face=&quot;bold&quot;))
+g&lt;-g+theme(legend.text=(element_text(colour=&quot;blue&quot;, size=8, face=&quot;bold.italic&quot;)))
+g&lt;-g+xlab(&quot;Longueur des p?tales&quot;)+ylab(&quot;Largeur des p?tales&quot;)+ggtitle(&quot;Longueur des p?tales en fonction de largeur des p?tales&quot;)
+g&lt;-g+theme(plot.title=element_text(colour=&quot;steelblue&quot;, size=15, face=&quot;bold&quot;))
+g&lt;-g+theme(axis.title=element_text(colour=&quot;steelblue&quot;, size=10, face=&quot;bold&quot;))
+g&lt;-g+theme(axis.text=element_text(colour=&quot;steelblue&quot;, size=10, face=&quot;bold&quot;, angle=45))
+#g&lt;-g+theme(axis.line=element_line(colour=&quot;steelblue&quot;, size=2, linetype=&quot;dotted&quot;))
+g&lt;-g+facet_wrap(~Species)+theme(strip.text=element_text(colour=&quot;steelblue&quot;, size=10, face=&quot;bold&quot;))
+g&lt;-g+theme(strip.background=element_rect(colour=&quot;steelblue&quot;, size=1,linetype=&quot;solid&quot;))
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+<div id="modification-des-noms-des-axes-et-ajout-dun-titre-au-graphique-2" class="section level1">
+<h1>modification des noms des axes et ajout d’un titre au graphique</h1>
+<pre class="r"><code>g&lt;-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Petal.Length, shape=Species))+geom_point(size=3)
+g&lt;-g+scale_color_gradient(low=&quot;blue&quot;, high=&quot;red&quot;)+theme_minimal()+theme(legend.title=element_text(colour=&quot;steelblue&quot;, size=9, face=&quot;bold&quot;))
+g&lt;-g+theme(legend.text=(element_text(colour=&quot;blue&quot;, size=8, face=&quot;bold.italic&quot;)))
+g&lt;-g+xlab(&quot;Longueur des p?tales&quot;)+ylab(&quot;Largeur des p?tales&quot;)+ggtitle(&quot;Longueur des p?tales en fonction de largeur des p?tales&quot;)
+g&lt;-g+theme(plot.title=element_text(colour=&quot;steelblue&quot;, size=15, face=&quot;bold&quot;))
+g&lt;-g+theme(axis.title=element_text(colour=&quot;steelblue&quot;, size=10, face=&quot;bold&quot;))
+g&lt;-g+theme(axis.text=element_text(colour=&quot;steelblue&quot;, size=10, face=&quot;bold&quot;, angle=45))
+#g&lt;-g+theme(axis.line=element_line(colour=&quot;steelblue&quot;, size=2, linetype=&quot;dotted&quot;))
+g&lt;-g+annotate(&quot;text&quot;, x=c(2,4,6), y=0.7, label=c(&quot;Setosa&quot;,&quot;Versicolor&quot;,&quot;Virginica&quot;), colour=&quot;steelblue&quot;, size=3, fontface=&quot;bold&quot;)
+g&lt;-g+annotate(&quot;rect&quot;, xmin=0.5, xmax=2.1, ymin=0, ymax=0.65, alpha=0.2, colour=&quot;steelblue&quot;, size=2)
+g&lt;-g+annotate(&quot;segment&quot;, x=0.5, xend=4, y=1.5, yend=0, colour=&quot;steelblue&quot;, size=2, alpha=0.5)
+g</code></pre>
+<p><img src="/post/2019-09-22-cours-3_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+<div id="histogramme-sur-les-donnes-iris" class="section level1">
+<h1>histogramme sur les donn?es iris</h1>
+<pre class="r"><code>png(&quot;histogramme_iris.png&quot;)
+g&lt;-ggplot(iris, aes(x=Petal.Length, fill=Species))+geom_histogram(color=&quot;white&quot;,binwidth =0.5)
+g
+dev.off()</code></pre>
+<pre><code>## quartz_off_screen 
+##                 2</code></pre>
+<pre class="r"><code>pdf(&quot;boxplot_iris.pdf&quot;)
+g&lt;-ggplot(iris, aes(x=Species, y=Petal.Length, fill=Species))+geom_boxplot()
+g&lt;-g+ggtitle(&quot;Boxplot de la longueur des p?tales selon l&#39;esp?ce&quot;)+xlab(&quot;Esp?ce&quot;)+ ylab(&quot;Longueur des p?tales&quot;)
+g
+dev.off()</code></pre>
+<pre><code>## quartz_off_screen 
+##                 2</code></pre>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+
+    
+  </body>
+</html>
+

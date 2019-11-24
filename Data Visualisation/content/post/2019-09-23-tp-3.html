@@ -1,0 +1,283 @@
+---
+title: "TP 3"
+author: "Louis-Clement Langue"
+date: 2019-09-23
+output: pdf_document
+---
+
+
+
+<pre class="r"><code>library(&quot;ggplot2&quot;)
+library(&quot;ggmap&quot;)</code></pre>
+<pre><code>## Google&#39;s Terms of Service: https://cloud.google.com/maps-platform/terms/.</code></pre>
+<pre><code>## Please cite ggmap if you use it! See citation(&quot;ggmap&quot;) for details.</code></pre>
+<pre class="r"><code>library(&quot;datasets&quot;)</code></pre>
+<div id="exercice-3.1" class="section level1">
+<h1>Exercice 3.1</h1>
+<p><span class="math inline">\(\sin(x)\)</span> pour <span class="math inline">\(x\)</span> sur <span class="math inline">\([0;2\pi]\)</span></p>
+<pre class="r"><code>curve(sin(x),from=0,to=2*pi)
+title(&quot;Graphe de la fonction sinus&quot;)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="exercice-3.2" class="section level1">
+<h1>Exercice 3.2</h1>
+<div id="section" class="section level2">
+<h2>3.2.1</h2>
+<pre class="r"><code>curve(dnorm(x, mean = 0, sd = 1),from=-4,to=4,ylab = &quot;Probabilité&quot;)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="et-3.2.3" class="section level2">
+<h2>3.2.2 et 3.2.3</h2>
+<pre class="r"><code>plot(dnorm,from = -4,to=4, ylab = &quot;Probabilité&quot;)
+curve(dt(x,5),from=-4,to=4,col=&quot;red&quot;,add =TRUE)
+curve(dt(x,30),from=-4,to=4,col=&quot;blue&quot;,add =TRUE)
+legend(&quot;topleft&quot;, legend=paste0(c(&quot;Distribution Normal&quot;,&quot;Loie de student a 5°&quot;,&quot;Loie de student a 30°&quot;)),col = c(&quot;black&quot;,&quot;red&quot;,&quot;blue&quot;),lty= 1,lwd = 2)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+</div>
+<div id="exercice-3.3" class="section level1">
+<h1>Exercice 3.3</h1>
+<pre class="r"><code>ozone=read.csv2(&quot;ozone.csv&quot;)
+ozone=ozone[,-1]</code></pre>
+<div id="section-1" class="section level2">
+<h2>3.3.1</h2>
+<pre class="r"><code>plot(ozone[,&quot;maxO3&quot;], ozone[,&quot;T12&quot;])</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="section-2" class="section level2">
+<h2>3.3.2</h2>
+<pre class="r"><code>plot(ozone[,&quot;T12&quot;], ozone[,&quot;maxO3&quot;],&quot;b&quot;)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="section-3" class="section level2">
+<h2>3.3.3</h2>
+<pre class="r"><code>ozone2 = ozone[order(ozone[,&quot;T12&quot;]),]
+plot(ozone2[,&quot;T12&quot;], ozone2[,&quot;maxO3&quot;],&quot;b&quot;)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+</div>
+<div id="exercice-3.7" class="section level1">
+<h1>Exercice 3.7</h1>
+<pre class="r"><code># 3.7.1 On trace la fonction de  densité de  la loi normal
+x = seq(from=-5,to=5,length=10000)
+y = dnorm(x)
+plot(x,y,&quot;l&quot;)
+
+# 3.7.2 On y ajoute l&#39;axe des absices
+abline( h = 0)
+
+# 3.7.3 On colorie l&#39;aire sous la courbe 
+valide &lt;- which(x &gt;= 1.65 &amp; x &lt;= 4) # On selectionne x tels que P(X &gt; alpha) = 0.05
+x.valide &lt;- x[valide]
+y.valide &lt;- y[valide]
+# On peut creer notre polygone sans oublier de le paire passer par l&#39;axe des absices
+polygon(c(min(x.valide),x.valide),c(min(y.valide),y.valide),col=&quot;blue&quot;)
+
+# 3.7.4
+arrows(2.8,0.15, 2,dnorm(2),lwd=2)
+
+# 3.7.5
+text(2.7,0.165,c(expression(alpha),&quot;            = 0.5&quot;))</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="exercice-3.8" class="section level1">
+<h1>Exercice 3.8</h1>
+<div id="section-4" class="section level2">
+<h2>2.8.1</h2>
+<pre class="r"><code>layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
+plot(1:10,10:1,pch=0,xlab = &quot;&quot;,ylab = &quot;&quot;)
+plot(rep(1,4),type=&quot;l&quot;,xlab = &quot;&quot;,ylab = &quot;&quot;)
+plot(c(2,3,-1,0),type=&quot;b&quot;,xlab = &quot;&quot;,ylab = &quot;&quot;)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="section-5" class="section level2">
+<h2>2.8.2</h2>
+<pre class="r"><code>layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE),width=c(4,1))
+plot(1:10,10:1,pch=0,xlab = &quot;&quot;,ylab = &quot;&quot;)
+plot(rep(1,4),type=&quot;l&quot;,xlab = &quot;&quot;,ylab = &quot;&quot;)
+plot(c(2,3,-1,0),type=&quot;b&quot;,xlab = &quot;&quot;,ylab = &quot;&quot;)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+</div>
+<div id="exercice-3.9" class="section level1">
+<h1>Exercice 3.9</h1>
+<div id="section-6" class="section level2">
+<h2>3.9.1</h2>
+<pre class="r"><code>villes &lt;- read.table(&quot;https://r-stat-sc-donnees.github.io/villes.csv&quot;,header=TRUE,sep=&quot;;&quot;)
+summary(villes)</code></pre>
+<pre><code>##       Villes    Nb.etudiant        latitude       longitude      
+##  Amiens  : 1   Min.   :  6679   Min.   :43.30   Min.   :-4.4861  
+##  Angers  : 1   1st Qu.: 20656   1st Qu.:45.61   1st Qu.: 0.4265  
+##  Arras   : 1   Median : 28932   Median :47.36   Median : 2.5649  
+##  Besancon: 1   Mean   : 54779   Mean   :47.13   Mean   : 2.5343  
+##  Bordeaux: 1   3rd Qu.: 52239   3rd Qu.:48.82   3rd Qu.: 4.9900  
+##  Brest   : 1   Max.   :531904   Max.   :50.63   Max.   : 7.7479  
+##  (Other) :24</code></pre>
+</div>
+<div id="section-7" class="section level2">
+<h2>3.9.2</h2>
+<pre class="r"><code>decoupe =c(0,15000,25000,50000,75000,100000,max(villes[,&quot;Nb.etudiant&quot;]))</code></pre>
+</div>
+<div id="section-8" class="section level2">
+<h2>3.9.3</h2>
+<pre class="r"><code>Xq = cut(villes[,&quot;Nb.etudiant&quot;],breaks=decoupe)</code></pre>
+</div>
+<div id="section-9" class="section level2">
+<h2>3.9.4</h2>
+<pre class="r"><code>levels(Xq) = paste(format(decoupe[-length(decoupe)]),format(decoupe[-1]),sep=&quot;-&quot;)</code></pre>
+</div>
+<div id="section-10" class="section level2">
+<h2>3.9.5</h2>
+<pre class="r"><code>map = make_bbox(longitude,latitude,data=villes)</code></pre>
+</div>
+<div id="section-11" class="section level2">
+<h2>3.9.6</h2>
+<pre class="r"><code>villes = cbind.data.frame(villes,Effectif=Xq)</code></pre>
+</div>
+<div id="section-12" class="section level2">
+<h2>3.9.7</h2>
+<pre class="r"><code>carte = get_map(map)</code></pre>
+<pre><code>## Source : http://tile.stamen.com/terrain/6/31/21.png</code></pre>
+<pre><code>## Source : http://tile.stamen.com/terrain/6/32/21.png</code></pre>
+<pre><code>## Source : http://tile.stamen.com/terrain/6/33/21.png</code></pre>
+<pre><code>## Source : http://tile.stamen.com/terrain/6/31/22.png</code></pre>
+<pre><code>## Source : http://tile.stamen.com/terrain/6/32/22.png</code></pre>
+<pre><code>## Source : http://tile.stamen.com/terrain/6/33/22.png</code></pre>
+<pre><code>## Source : http://tile.stamen.com/terrain/6/31/23.png</code></pre>
+<pre><code>## Source : http://tile.stamen.com/terrain/6/32/23.png</code></pre>
+<pre><code>## Source : http://tile.stamen.com/terrain/6/33/23.png</code></pre>
+</div>
+<div id="section-13" class="section level2">
+<h2>3.9.8</h2>
+<pre class="r"><code>ggmap(carte)+
+  geom_point(data = villes, aes(x=longitude,y=latitude,color=Effectif,size=Nb.etudiant))+guides(size=FALSE) </code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+</div>
+</div>
+<div id="exercice-3.13" class="section level1">
+<h1>Exercice 3.13</h1>
+<div id="section-14" class="section level2">
+<h2>3.13.1</h2>
+<pre class="r"><code>data(&quot;mtcars&quot;)
+hist(mtcars[,&quot;mpg&quot;],xlab = &quot;Consommation (en mpg)&quot;,ylab = &quot;Frequence&quot;,main = &quot;Histogramme de la consommation des vehicules&quot;, col = &quot;lightblue&quot;)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+</div>
+<div id="section-15" class="section level2">
+<h2>3.13.2</h2>
+<pre class="r"><code>hist(mtcars[,&quot;cyl&quot;],xlab = &quot;cyl&quot;,ylab = &quot;&quot;,main = &quot;Histogramme de cyl&quot;, col = &quot;lightblue&quot;)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+</div>
+<div id="section-16" class="section level2">
+<h2>3.13.3</h2>
+<pre class="r"><code>ggplot(mtcars,aes (x = disp, y =  mpg, color= cyl))+geom_point()+facet_grid(~cyl)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+</div>
+<div id="exercice-3.14" class="section level1">
+<h1>Exercice 3.14</h1>
+<pre class="r"><code>X = matrix(c(0.3,0.2,0.4,0.1),nrow = 4,ncol = 1)
+colnames(X) = c(&quot;probabilite&quot;)
+rownames(X) = c(&quot;red&quot;,&quot;blue&quot;,&quot;green&quot;,&quot;black&quot;)
+show(X)</code></pre>
+<pre><code>##       probabilite
+## red           0.3
+## blue          0.2
+## green         0.4
+## black         0.1</code></pre>
+<pre class="r"><code>barplot(X[,&quot;probabilite&quot;],col=(c(&quot;red&quot;,&quot;blue&quot;,&quot;green&quot;,&quot;black&quot;))) </code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+</div>
+<div id="exercice-3.15" class="section level1">
+<h1>Exercice 3.15</h1>
+<pre class="r"><code>t=seq(-2*pi,2*pi,0.1)
+y=seq(-5,5,1)
+res1 = sin(t)
+res2 = cos(t)
+issin = logical(length(t))
+issin = rep(&quot;sinus&quot;, length(t))
+iscos = rep(&quot;cosinus&quot;,length(t))
+
+mydata= data.frame(
+  &quot;t&quot;=c(t,t),
+  &quot;sin&quot;=sin(t),
+  &quot;w&quot;=1+0*t,
+  &quot;ww&quot;=-1+0*t,
+  &quot;cos&quot;= cos(t),
+  &quot;res&quot; = c(res1,res2),
+  &quot;resissin&quot; = c(issin,iscos)
+)
+
+
+#3.15.1 et 3.15.2 et 3.15.3 et 3.15.4
+ggplot(mydata, aes(x=t))+geom_line(aes(x=t,y=sin,color =&quot;sin&quot;))+geom_line(aes(x=t,y=cos, color=&quot;cos&quot;))+
+geom_line(aes(y=w), size=2, color =&quot;blue&quot;)+
+geom_line(aes(y=ww), size=2, color =&quot;blue&quot;)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>#3.15.5</p>
+<pre class="r"><code>gg=ggplot(mydata, aes(x=t,y=res))+geom_line(aes(x=t,y=sin))+
+geom_line(aes(y=w), size=2, color =&quot;blue&quot;)+
+geom_line(aes(y=ww), size=2, color =&quot;blue&quot;)
+gg+facet_wrap(. ~ resissin)</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+</div>
+<div id="exercice-3.18" class="section level1">
+<h1>Exercice 3.18</h1>
+<div id="section-17" class="section level2">
+<h2>3.18.1</h2>
+<pre class="r"><code>library(&quot;mlbench&quot;)
+data(&quot;Ozone&quot;)</code></pre>
+</div>
+<div id="section-18" class="section level2">
+<h2>3.18.2</h2>
+<pre class="r"><code>tmp = seq(1:length(Ozone[,1]))
+for(i in 1:length(Ozone[,1])) tmp[i]=paste(c(&quot;1976&quot;,as.character(Ozone[i,1:2])),collapse = &quot;-&quot;)
+date = as.Date(tmp,&quot;%Y-%m-%d&quot;)</code></pre>
+</div>
+<div id="section-19" class="section level2">
+<h2>3.18.3</h2>
+<pre class="r"><code>g3 = ggplot(Ozone,aes(x = date, y = V4))+geom_point()+xlab(&quot;&quot;)+ylab(&quot;Concentration en O3&quot;)
+g3</code></pre>
+<pre><code>## Warning: Removed 5 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+<div id="section-20" class="section level2">
+<h2>3.18.4</h2>
+<pre class="r"><code>g4 = ggplot(Ozone,aes(x = V8,y = V4))+geom_point()+ggtitle(&quot;Concentration en Ozone contre la temperature&quot;)
+g4 = g4 + xlab(&quot;temperature (en °F)&quot;) + ylab(&quot;concentration en ozone&quot;)
+g4</code></pre>
+<pre><code>## Warning: Removed 7 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
+<div id="section-21" class="section level2">
+<h2>3.18.5</h2>
+<pre class="r"><code>mois = format(date,&quot;%b&quot;)</code></pre>
+</div>
+<div id="section-22" class="section level2">
+<h2>3.18.6</h2>
+<pre class="r"><code>g6 = ggplot(Ozone,aes(x= mois,y=V4))+geom_boxplot(width = 20)
+g6 = g6 + scale_x_discrete(limits=mois)
+g6 = g6 + xlab(&quot;&quot;) + ylab(&quot;Concentration en ozone&quot;) 
+g6</code></pre>
+<pre><code>## Warning: Removed 5 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+</div>
+<div id="section-23" class="section level2">
+<h2>3.18.7</h2>
+<pre class="r"><code>vent = cut(Ozone$V6,3,dig.lab=0)
+table(vent)</code></pre>
+<pre><code>## vent
+## (-0.01,4]     (4,7] (7,1e+01] 
+##        98       233        35</code></pre>
+</div>
+<div id="section-24" class="section level2">
+<h2>3.18.8</h2>
+<pre class="r"><code>numbermonth = mois
+names(numbermonth) = Ozone[,1]
+ggplot(Ozone,aes(x = V2, y  = V4,color=vent))+geom_point()+
+facet_grid(~V1,labeller=labeller(V1 = numbermonth))+
+theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())+
+xlab(&quot;&quot;)+ylab(&quot;Concentration en ozone&quot;)</code></pre>
+<pre><code>## Warning: Removed 5 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2019-09-23-tp-3_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+</div>
+</div>

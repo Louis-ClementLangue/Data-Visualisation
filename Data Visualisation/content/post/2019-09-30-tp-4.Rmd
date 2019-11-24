@@ -1,0 +1,58 @@
+---
+title: "TP 4"
+author: "Louis-Clement Langue"
+date: 2019-10-30
+output: pdf_document
+---
+
+```{r}
+library(dplyr)
+```
+
+
+```{r}
+original = read.csv("original.csv",header = T, sep = ",")
+```
+
+# Exercice 1
+On cherche à trouver les 5 villes avec lez plus de fastfood
+
+On garde uniquement les deux colones qui nous intéressent à savoir le nom des fast food et leurs ville
+```{r}
+neworiginal = select(original,name,city)
+```
+
+On crée une nouvelle table contenant chaque ville et son nombre de fast food
+```{r}
+listefstfood = neworiginal %>% group_by(city) %>% summarise(nbfastfood = length(name))
+```
+
+On trie cette table dans l'ordre decroissant
+```{r}
+listefstfood = listefstfood[order(-listefstfood$nbfastfood),]
+```
+
+On prend les 5 premiers elements
+```{r}
+listefstfoodmax = listefstfood %>% slice(1:5)
+listefstfoodmax
+```
+
+# Exercice 2
+On cheche à trouver quelle fastfood est le plus present
+
+On crée une nouvelle table contenant chaque nom de fast food et son nombre
+```{r}
+listenamefastfood = original %>% group_by(name) %>% summarise(nbfastfood = length(name))
+```
+
+On trie cette table dans l'ordre decroissant
+```{r}
+listenamefastfood = listenamefastfood[order(-listenamefastfood$nbfastfood),]
+```
+
+On prend les 5 premiers elements
+```{r}
+listenamefastfoodmax = listenamefastfood %>% slice(1:5)
+listenamefastfoodmax
+```

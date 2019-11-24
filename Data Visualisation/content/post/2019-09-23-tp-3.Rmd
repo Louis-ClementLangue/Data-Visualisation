@@ -1,0 +1,293 @@
+---
+title: "TP 3"
+author: "Louis-Clement Langue"
+date: 2019-09-23
+output: pdf_document
+---
+
+```{r}
+library("ggplot2")
+library("ggmap")
+library("datasets")
+```
+
+# Exercice 3.1
+
+$\sin(x)$ pour $x$ sur $[0;2\pi]$
+
+```{r}
+curve(sin(x),from=0,to=2*pi)
+title("Graphe de la fonction sinus")
+```
+
+# Exercice 3.2
+## 3.2.1
+
+```{r}
+curve(dnorm(x, mean = 0, sd = 1),from=-4,to=4,ylab = "Probabilité")
+
+```
+
+## 3.2.2 et 3.2.3
+
+```{r}
+plot(dnorm,from = -4,to=4, ylab = "Probabilité")
+curve(dt(x,5),from=-4,to=4,col="red",add =TRUE)
+curve(dt(x,30),from=-4,to=4,col="blue",add =TRUE)
+legend("topleft", legend=paste0(c("Distribution Normal","Loie de student a 5°","Loie de student a 30°")),col = c("black","red","blue"),lty= 1,lwd = 2)
+
+```
+
+# Exercice 3.3
+
+```{r}
+ozone=read.csv2("ozone.csv")
+ozone=ozone[,-1]
+```
+
+## 3.3.1
+
+```{r}
+plot(ozone[,"maxO3"], ozone[,"T12"])
+```
+
+## 3.3.2
+
+```{r}
+plot(ozone[,"T12"], ozone[,"maxO3"],"b")
+```
+
+## 3.3.3
+```{r}
+ozone2 = ozone[order(ozone[,"T12"]),]
+plot(ozone2[,"T12"], ozone2[,"maxO3"],"b")
+```
+
+# Exercice 3.7
+```{r}
+# 3.7.1 On trace la fonction de  densité de  la loi normal
+x = seq(from=-5,to=5,length=10000)
+y = dnorm(x)
+plot(x,y,"l")
+
+# 3.7.2 On y ajoute l'axe des absices
+abline( h = 0)
+
+# 3.7.3 On colorie l'aire sous la courbe 
+valide <- which(x >= 1.65 & x <= 4) # On selectionne x tels que P(X > alpha) = 0.05
+x.valide <- x[valide]
+y.valide <- y[valide]
+# On peut creer notre polygone sans oublier de le paire passer par l'axe des absices
+polygon(c(min(x.valide),x.valide),c(min(y.valide),y.valide),col="blue")
+
+# 3.7.4
+arrows(2.8,0.15, 2,dnorm(2),lwd=2)
+
+# 3.7.5
+text(2.7,0.165,c(expression(alpha),"            = 0.5"))
+```
+
+# Exercice 3.8
+
+## 2.8.1
+
+```{r}
+layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
+plot(1:10,10:1,pch=0,xlab = "",ylab = "")
+plot(rep(1,4),type="l",xlab = "",ylab = "")
+plot(c(2,3,-1,0),type="b",xlab = "",ylab = "")
+```
+
+## 2.8.2
+
+```{r}
+layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE),width=c(4,1))
+plot(1:10,10:1,pch=0,xlab = "",ylab = "")
+plot(rep(1,4),type="l",xlab = "",ylab = "")
+plot(c(2,3,-1,0),type="b",xlab = "",ylab = "")
+```
+
+# Exercice 3.9 
+
+## 3.9.1
+
+```{r}
+villes <- read.table("https://r-stat-sc-donnees.github.io/villes.csv",header=TRUE,sep=";")
+summary(villes)
+```
+
+## 3.9.2
+
+```{r}
+decoupe =c(0,15000,25000,50000,75000,100000,max(villes[,"Nb.etudiant"]))
+```
+
+## 3.9.3
+
+```{r}
+Xq = cut(villes[,"Nb.etudiant"],breaks=decoupe)
+```
+
+## 3.9.4
+
+```{r}
+levels(Xq) = paste(format(decoupe[-length(decoupe)]),format(decoupe[-1]),sep="-")
+```
+
+## 3.9.5
+
+```{r}
+map = make_bbox(longitude,latitude,data=villes)
+```
+
+## 3.9.6
+
+```{r}
+villes = cbind.data.frame(villes,Effectif=Xq)
+```
+
+## 3.9.7
+
+```{r}
+carte = get_map(map)
+```
+
+## 3.9.8
+
+```{r}
+ggmap(carte)+
+  geom_point(data = villes, aes(x=longitude,y=latitude,color=Effectif,size=Nb.etudiant))+guides(size=FALSE) 
+```
+
+
+# Exercice 3.13
+
+## 3.13.1
+```{r}
+data("mtcars")
+hist(mtcars[,"mpg"],xlab = "Consommation (en mpg)",ylab = "Frequence",main = "Histogramme de la consommation des vehicules", col = "lightblue")
+```
+
+## 3.13.2
+```{r}
+hist(mtcars[,"cyl"],xlab = "cyl",ylab = "",main = "Histogramme de cyl", col = "lightblue")
+```
+
+## 3.13.3
+```{r}
+ggplot(mtcars,aes (x = disp, y =  mpg, color= cyl))+geom_point()+facet_grid(~cyl)
+```
+
+# Exercice 3.14
+```{r}
+
+X = matrix(c(0.3,0.2,0.4,0.1),nrow = 4,ncol = 1)
+colnames(X) = c("probabilite")
+rownames(X) = c("red","blue","green","black")
+show(X)
+barplot(X[,"probabilite"],col=(c("red","blue","green","black"))) 
+```
+
+# Exercice 3.15
+```{r}
+t=seq(-2*pi,2*pi,0.1)
+y=seq(-5,5,1)
+res1 = sin(t)
+res2 = cos(t)
+issin = logical(length(t))
+issin = rep("sinus", length(t))
+iscos = rep("cosinus",length(t))
+
+mydata= data.frame(
+  "t"=c(t,t),
+  "sin"=sin(t),
+  "w"=1+0*t,
+  "ww"=-1+0*t,
+  "cos"= cos(t),
+  "res" = c(res1,res2),
+  "resissin" = c(issin,iscos)
+)
+
+
+#3.15.1 et 3.15.2 et 3.15.3 et 3.15.4
+ggplot(mydata, aes(x=t))+geom_line(aes(x=t,y=sin,color ="sin"))+geom_line(aes(x=t,y=cos, color="cos"))+
+geom_line(aes(y=w), size=2, color ="blue")+
+geom_line(aes(y=ww), size=2, color ="blue")
+
+```
+
+#3.15.5
+```{r}
+gg=ggplot(mydata, aes(x=t,y=res))+geom_line(aes(x=t,y=sin))+
+geom_line(aes(y=w), size=2, color ="blue")+
+geom_line(aes(y=ww), size=2, color ="blue")
+gg+facet_wrap(. ~ resissin)
+```
+
+
+# Exercice 3.18
+## 3.18.1
+```{r}
+library("mlbench")
+data("Ozone")
+
+```
+
+## 3.18.2
+
+```{r}
+tmp = seq(1:length(Ozone[,1]))
+for(i in 1:length(Ozone[,1])) tmp[i]=paste(c("1976",as.character(Ozone[i,1:2])),collapse = "-")
+date = as.Date(tmp,"%Y-%m-%d")
+```
+
+## 3.18.3
+
+```{r}
+g3 = ggplot(Ozone,aes(x = date, y = V4))+geom_point()+xlab("")+ylab("Concentration en O3")
+g3
+```
+
+## 3.18.4
+
+```{r}
+g4 = ggplot(Ozone,aes(x = V8,y = V4))+geom_point()+ggtitle("Concentration en Ozone contre la temperature")
+g4 = g4 + xlab("temperature (en °F)") + ylab("concentration en ozone")
+g4
+```
+
+## 3.18.5
+
+```{r}
+mois = format(date,"%b")
+```
+
+## 3.18.6
+
+```{r}
+g6 = ggplot(Ozone,aes(x= mois,y=V4))+geom_boxplot(width = 20)
+g6 = g6 + scale_x_discrete(limits=mois)
+g6 = g6 + xlab("") + ylab("Concentration en ozone") 
+g6
+```
+
+## 3.18.7
+
+```{r}
+vent = cut(Ozone$V6,3,dig.lab=0)
+table(vent)
+```
+
+## 3.18.8
+
+```{r}
+numbermonth = mois
+names(numbermonth) = Ozone[,1]
+ggplot(Ozone,aes(x = V2, y  = V4,color=vent))+geom_point()+
+facet_grid(~V1,labeller=labeller(V1 = numbermonth))+
+theme(axis.text.x = element_blank(),axis.ticks.x = element_blank())+
+xlab("")+ylab("Concentration en ozone")
+```
+
+
+

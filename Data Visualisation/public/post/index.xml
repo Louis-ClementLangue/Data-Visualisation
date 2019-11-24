@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Data Visualisation</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on Data Visualisation</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 30 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>TP 4</title>
+      <link>/2019/10/30/tp-4/</link>
+      <pubDate>Wed, 30 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/10/30/tp-4/</guid>
+      <description>library(dplyr) ## ## Attachement du package : &amp;#39;dplyr&amp;#39; ## The following objects are masked from &amp;#39;package:stats&amp;#39;: ## ## filter, lag ## The following objects are masked from &amp;#39;package:base&amp;#39;: ## ## intersect, setdiff, setequal, union original = read.csv(&amp;quot;original.csv&amp;quot;,header = T, sep = &amp;quot;,&amp;quot;) Exercice 1 On cherche à trouver les 5 villes avec lez plus de fastfood
+On garde uniquement les deux colones qui nous intéressent à savoir le nom des fast food et leurs ville</description>
+    </item>
+    
+    <item>
+      <title>Cours 5</title>
+      <link>/2019/10/07/cours-5/</link>
+      <pubDate>Mon, 07 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/10/07/cours-5/</guid>
+      <description>Problèmatique. Vous avez été contacté par un magazine de finance et le directeur de l’édition vous a envoyé un fichier de données sur 500 entreprises et il vous demande de faire les graphiques suivants: 1- un nuage de points spécifique par industire où l’on peu visualiser les revenus, les dépenses et le le profit. 2- un nuage de points incluant les tendances des différentes industries pour les variable dépenses et revenus.</description>
+    </item>
+    
+    <item>
+      <title>Cours 4</title>
+      <link>/2019/09/30/cours-4/</link>
+      <pubDate>Mon, 30 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/09/30/cours-4/</guid>
+      <description>Dans cette partie, nous allons voir comment manipuler plus efficacement les jeux de données. Dans les fiches précédentes, nous avions utilisés le jeu de données iris qui est petit avec 5 modalités et 150 lignes. Facile à explorer avec les instructions For, wich… Néanmoins, dans la vraie vie d’un data scientiste, les données de la taille du jeu de données iris sont rares. Les jeux de données sont très volumuneux et les instruction for et wich risque de retarder la compilation et rendre votre programme très lent.</description>
+    </item>
+    
+    <item>
+      <title>Cours  3</title>
+      <link>/2019/09/23/cours-3/</link>
+      <pubDate>Mon, 23 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/09/23/cours-3/</guid>
+      <description>#####ggplot2
+Dans un premier point, il est nécessaire de charger le package ggplot2 pour cela nous allons comprendre d’abord la structure d’un graphique sous ggplot2. Déjà, pour faire un graphique, nous allons additionner un ensemble de fonctions. un simple graphique sous ggplot2 aura besoin d’une fonction ggplot, une aesthétic, de fonction geom, fonction facet, fonction thème … selon le besoin nous pouvons définir le graphique que nous souhaitons. Connaitre toutes les fonctionnalités de ggplot2 c’est très bien mais vous trouverai de la documentation facilement sur Github</description>
+    </item>
+    
+    <item>
+      <title>TP 3</title>
+      <link>/2019/09/23/tp-3/</link>
+      <pubDate>Mon, 23 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/09/23/tp-3/</guid>
+      <description>library(&amp;quot;ggplot2&amp;quot;) library(&amp;quot;ggmap&amp;quot;) ## Google&amp;#39;s Terms of Service: https://cloud.google.com/maps-platform/terms/. ## Please cite ggmap if you use it! See citation(&amp;quot;ggmap&amp;quot;) for details. library(&amp;quot;datasets&amp;quot;) Exercice 3.1 \(\sin(x)\) pour \(x\) sur \([0;2\pi]\)
+curve(sin(x),from=0,to=2*pi) title(&amp;quot;Graphe de la fonction sinus&amp;quot;)  Exercice 3.2 3.2.1 curve(dnorm(x, mean = 0, sd = 1),from=-4,to=4,ylab = &amp;quot;Probabilité&amp;quot;)  3.2.2 et 3.2.3 plot(dnorm,from = -4,to=4, ylab = &amp;quot;Probabilité&amp;quot;) curve(dt(x,5),from=-4,to=4,col=&amp;quot;red&amp;quot;,add =TRUE) curve(dt(x,30),from=-4,to=4,col=&amp;quot;blue&amp;quot;,add =TRUE) legend(&amp;quot;topleft&amp;quot;, legend=paste0(c(&amp;quot;Distribution Normal&amp;quot;,&amp;quot;Loie de student a 5°&amp;quot;,&amp;quot;Loie de student a 30°&amp;quot;)),col = c(&amp;quot;black&amp;quot;,&amp;quot;red&amp;quot;,&amp;quot;blue&amp;quot;),lty= 1,lwd = 2)   Exercice 3.</description>
+    </item>
+    
+    <item>
+      <title>Cours 2</title>
+      <link>/2019/09/16/cours-2/</link>
+      <pubDate>Mon, 16 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/09/16/cours-2/</guid>
+      <description>data(&amp;quot;iris&amp;quot;) donnee_Iris=read.table(&amp;quot;iris.csv&amp;quot;, header = T, sep=&amp;quot;,&amp;quot;, row.names = 1) #row.names permet de très la premiére colonnes comme nom de lignes. View(donnee_Iris) donnee_Iris ## Sepal.Length Sepal.Width Petal.Length Petal.Width Species ## 1 5.1 3.5 1.4 0.2 setosa ## 2 4.9 3.0 1.4 0.2 setosa ## 3 4.7 3.2 1.3 0.2 setosa ## 4 4.6 3.1 1.5 0.2 setosa ## 5 5.0 3.6 1.4 0.2 setosa ## 6 5.4 3.9 1.7 0.4 setosa ## 7 4.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,726 @@
+---
+title: "Cours 4"
+author: "Feryal WINDAL"
+date: 2019-09-30
+output: html_document
+---
+
+
+
+<p>Dans cette partie, nous allons voir comment manipuler plus efficacement les jeux de données.
+Dans les fiches précédentes, nous avions utilisés le jeu de données iris qui est petit avec 5 modalités et 150 lignes. Facile à explorer avec les instructions For, wich…
+Néanmoins, dans la vraie vie d’un data scientiste, les données de la taille du jeu de données iris sont rares.
+Les jeux de données sont très volumuneux et les instruction for et wich risque de retarder la compilation et rendre votre programme très lent.
+Il est nécessaire d’utilser d’autres outils beaucoup plus optimisés.</p>
+<div id="apply" class="section level1">
+<h1>Apply</h1>
+<p>La fonction apply, prend 3 arguments principaux :
+apply(X, MARGIN,FUN)
+X: data frame ou matrice
+MARGIN = 1 si c’est les lignes, = 2 si colonne. Si on souhaite lignes + colonnes =c(1,2).
+FUN= fonction(mean, summary, sum…)</p>
+<p>Nous allons utiliser pour illustrer le jeu de données iris.</p>
+<pre class="r"><code>data(&quot;iris&quot;)</code></pre>
+<p>Rappelez vous, avant, il fallait redefinir un nouveau data frame pour explorer des données quantitatives (sans la 5ème colonne du jeu de données iris qui indique le type de l’espèce)
+Avec Apply c’est différent.
+Imaginons également que l’on souhaite calculer la moyenne e chaque modalité ou chaque colonne:</p>
+<pre class="r"><code>apply(iris[,-5], 2, mean)</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+##     5.843333     3.057333     3.758000     1.199333</code></pre>
+<pre class="r"><code>apply(iris[,-5], 2, summary)</code></pre>
+<pre><code>##         Sepal.Length Sepal.Width Petal.Length Petal.Width
+## Min.        4.300000    2.000000        1.000    0.100000
+## 1st Qu.     5.100000    2.800000        1.600    0.300000
+## Median      5.800000    3.000000        4.350    1.300000
+## Mean        5.843333    3.057333        3.758    1.199333
+## 3rd Qu.     6.400000    3.300000        5.100    1.800000
+## Max.        7.900000    4.400000        6.900    2.500000</code></pre>
+<p>Si l’on souhaite maintenant définir notre propre fonction, sur l’ensemble du jeu de données :
+Ici nous allons créer une fonction qui permet de calculer la taille d’un vecteur. Elle prend en argument un vecteur, et elle renvoie sa taille en utilisant la fonction lenght.
+Il faut compiler ce bout de code ce qui va générer un fichier</p>
+<pre class="r"><code>nombre_valeur_sup_5 = function(vecteur){
+  length(vecteur[vecteur&gt;5])
+}</code></pre>
+<p>Maintenant que j’ai créé ma propre fonction, je peux l’appliquer à mon jeu de données Iris.</p>
+<pre class="r"><code>apply(iris[,-5],2,nombre_valeur_sup_5)</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+##          118            0           42            0</code></pre>
+<p>Ce que l’on peu remarque ici, est que le nombre d’individus avec une longueur de sépal &gt; 5 est de 118, ceux avec une largeur du sépal &gt;5 est 0, ceux avec une longueur du pétal &gt; 5 est de 42 et ceux avec une largeur du pétal &gt;5 est 0.</p>
+<p>Apply est une fonction puissante, néanmoins, il y a plus puissant que la fonction Apply()</p>
+</div>
+<div id="la-fonction-by" class="section level1">
+<h1>La fonction by()</h1>
+<p>Deux autres fonctions qui permettent de faire des statistiques par modalités. Rappelez vous, dans le jeu de données Iris, le vecteurs Species</p>
+<pre class="r"><code>head(iris)</code></pre>
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
+<p>Imaginons que l’on souhaite faire une statistique type summary par modalité, ou par variable qualitative, nous allons définir une nouvelle fonction by():
+by(X, INDICES, FUN)
+X: représente un data frame
+INDICES : représente le groupe ou la colonne ou la modalité par laquelle nous voulons faire le sous ensemble de données, par exemple iris$Spices.
+FUN : c’est notre fonction que l’on souhaite appliquer sur le sous ensemble de données. Dans notre exemple ci-dessous ça sera summary.</p>
+<pre class="r"><code>by(iris, iris$Species, summary)</code></pre>
+<pre><code>## iris$Species: setosa
+##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
+##  Min.   :4.300   Min.   :2.300   Min.   :1.000   Min.   :0.100  
+##  1st Qu.:4.800   1st Qu.:3.200   1st Qu.:1.400   1st Qu.:0.200  
+##  Median :5.000   Median :3.400   Median :1.500   Median :0.200  
+##  Mean   :5.006   Mean   :3.428   Mean   :1.462   Mean   :0.246  
+##  3rd Qu.:5.200   3rd Qu.:3.675   3rd Qu.:1.575   3rd Qu.:0.300  
+##  Max.   :5.800   Max.   :4.400   Max.   :1.900   Max.   :0.600  
+##        Species  
+##  setosa    :50  
+##  versicolor: 0  
+##  virginica : 0  
+##                 
+##                 
+##                 
+## -------------------------------------------------------- 
+## iris$Species: versicolor
+##   Sepal.Length    Sepal.Width     Petal.Length   Petal.Width   
+##  Min.   :4.900   Min.   :2.000   Min.   :3.00   Min.   :1.000  
+##  1st Qu.:5.600   1st Qu.:2.525   1st Qu.:4.00   1st Qu.:1.200  
+##  Median :5.900   Median :2.800   Median :4.35   Median :1.300  
+##  Mean   :5.936   Mean   :2.770   Mean   :4.26   Mean   :1.326  
+##  3rd Qu.:6.300   3rd Qu.:3.000   3rd Qu.:4.60   3rd Qu.:1.500  
+##  Max.   :7.000   Max.   :3.400   Max.   :5.10   Max.   :1.800  
+##        Species  
+##  setosa    : 0  
+##  versicolor:50  
+##  virginica : 0  
+##                 
+##                 
+##                 
+## -------------------------------------------------------- 
+## iris$Species: virginica
+##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width   
+##  Min.   :4.900   Min.   :2.200   Min.   :4.500   Min.   :1.400  
+##  1st Qu.:6.225   1st Qu.:2.800   1st Qu.:5.100   1st Qu.:1.800  
+##  Median :6.500   Median :3.000   Median :5.550   Median :2.000  
+##  Mean   :6.588   Mean   :2.974   Mean   :5.552   Mean   :2.026  
+##  3rd Qu.:6.900   3rd Qu.:3.175   3rd Qu.:5.875   3rd Qu.:2.300  
+##  Max.   :7.900   Max.   :3.800   Max.   :6.900   Max.   :2.500  
+##        Species  
+##  setosa    : 0  
+##  versicolor: 0  
+##  virginica :50  
+##                 
+##                 
+## </code></pre>
+<p>Comme on peut le voir, nous avons obtenu pour chque groupe une statistique propre. Le retur de la fonction by() n’est pas un data frame mais bien la structure de données de type list. Nous n’allons pas étudier ce type de structure. Elles ont le mérite d’exister et elles sont très puissantes lorsque l’on a une bonne maitrise. Mais maîtriser les data frame c’est largement sufisant pour un bon data scientist.</p>
+<p>Autre exemple avec la fonction by() est l’utilisation de la fonction de correlation cor() de pierson (nous étudirons cela en cours de stat).
+Comme cor s’applique que sur des données numériques, quantitatives, il est nécessaire de supprimer la 5ème colonne pour l’executer sinon nous avons une erreur lors de la compilation.
+Pour information, la fonction cor() capare les variables deux à deux. Cette matrice nous indique les variables qui sont les plus corrélées entre elles. Plus c’est proche de 1 plus il y a correlation
+Quand les valeurs sont inférieurs à 0.6, cela indique qu’il n’y a pas de corrélation.</p>
+<pre class="r"><code>by(iris[,-5], iris$Species, cor)</code></pre>
+<pre><code>## iris$Species: setosa
+##              Sepal.Length Sepal.Width Petal.Length Petal.Width
+## Sepal.Length    1.0000000   0.7425467    0.2671758   0.2780984
+## Sepal.Width     0.7425467   1.0000000    0.1777000   0.2327520
+## Petal.Length    0.2671758   0.1777000    1.0000000   0.3316300
+## Petal.Width     0.2780984   0.2327520    0.3316300   1.0000000
+## -------------------------------------------------------- 
+## iris$Species: versicolor
+##              Sepal.Length Sepal.Width Petal.Length Petal.Width
+## Sepal.Length    1.0000000   0.5259107    0.7540490   0.5464611
+## Sepal.Width     0.5259107   1.0000000    0.5605221   0.6639987
+## Petal.Length    0.7540490   0.5605221    1.0000000   0.7866681
+## Petal.Width     0.5464611   0.6639987    0.7866681   1.0000000
+## -------------------------------------------------------- 
+## iris$Species: virginica
+##              Sepal.Length Sepal.Width Petal.Length Petal.Width
+## Sepal.Length    1.0000000   0.4572278    0.8642247   0.2811077
+## Sepal.Width     0.4572278   1.0000000    0.4010446   0.5377280
+## Petal.Length    0.8642247   0.4010446    1.0000000   0.3221082
+## Petal.Width     0.2811077   0.5377280    0.3221082   1.0000000</code></pre>
+<p>Si nous souhaitons par exemple appliquer la fonction mean sur les sous ensemble.</p>
+<pre class="r"><code>#by(iris[,-5], iris$Species, mean)</code></pre>
+<p>Cela ne marchera pas puisque mean s’execute que sur des vecteurs.
+C’est l’un des désaventages de la fonction by(). Autre fonction qui va avec by() est la fonction aggregate().</p>
+</div>
+<div id="la-fonction-aggregate" class="section level1">
+<h1>La fonction aggregate()</h1>
+<p>aggregate(X, BY, FUN)
+X : un data frame
+By est le sous ensemble sur lequel nous vous executer une fonction FUN
+FUN : notre fonction</p>
+<pre class="r"><code>aggregate(iris[,-5], as.data.frame(iris$Species), mean)</code></pre>
+<pre><code>##   iris$Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1       setosa        5.006       3.428        1.462       0.246
+## 2   versicolor        5.936       2.770        4.260       1.326
+## 3    virginica        6.588       2.974        5.552       2.026</code></pre>
+<p>aggregate permet de traiter le data frame colonne par colonne.
+Il est important de transformer iris$Spices en data frame au risque d’avoir une erreur.
+Comme nous pouvons le constater, nous avons un tableau où chaque groupe a sa moyenne colonne par colonne.
+C’est une des puissance de la fonction aggregate().</p>
+</div>
+<div id="la-package-dyplr" class="section level1">
+<h1>La package dyplr</h1>
+<p>C’est un des package le plus puissant sur R. Il est très optimisé et permets une manipulation très avancée des données de manière très simple. Son avantage est qu’il a une grammaire très simple et facile d’utilisation. C’est également le plus rapide (pour ceux qui sont dans la performances des algos ;-)).</p>
+<p>Pour commencer il faut installer et charger le package.</p>
+<pre class="r"><code>#install.packages(&quot;dplyr&quot;)</code></pre>
+<p>Il faut charger la librairie à chaque fois.</p>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attachement du package : &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<p>Pour information, dplyr permet de manipuler tous les types de données, mais il a également une structure de donnée propre à lui, c’est le type tibble.</p>
+<p>Nous allons reprendre le jeu de données iris qui est de type data frame et nous allons le transformer en tibble pour voir la différence entre les deux types de données.</p>
+<pre class="r"><code>data.iris=as_tibble(iris)</code></pre>
+<p>Si on affiche ce jeu de données voici ce que l’on remarque :</p>
+<pre class="r"><code>data.iris</code></pre>
+<pre><code>## # A tibble: 150 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## # … with 140 more rows</code></pre>
+<p>Le head est fait automatiquement pour 10 premières lignes.
+Sous chaque colonne, nous avons l’information sur le type de donnée dbl pour double et fctr pour factor.</p>
+</div>
+<div id="select-selectionner-les-colonnes" class="section level1">
+<h1>Select : selectionner les colonnes</h1>
+<p>Imaginons que l’on souhaite selectionner quelques colonnes.
+Comme nous allons toujours utiliser le jeu de données iris, nous allons renommer data.iris (qui est un type tibble) par iris,</p>
+<pre class="r"><code>iris= data.iris
+iris</code></pre>
+<pre><code>## # A tibble: 150 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## # … with 140 more rows</code></pre>
+<p>comme nous pouvons le constater la classe de iris maintenant est tibble.</p>
+<pre class="r"><code>class(iris)</code></pre>
+<pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
+<p>Si l’on souhaite selection que les colonne contenant les informations sur les Sépales avec le types de fleux “Species”, il suffit pour cela de les indiquer dans la fonction select.</p>
+<pre class="r"><code>select(iris, Sepal.Length, Sepal.Width, Species)</code></pre>
+<pre><code>## # A tibble: 150 x 3
+##    Sepal.Length Sepal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5 setosa 
+##  2          4.9         3   setosa 
+##  3          4.7         3.2 setosa 
+##  4          4.6         3.1 setosa 
+##  5          5           3.6 setosa 
+##  6          5.4         3.9 setosa 
+##  7          4.6         3.4 setosa 
+##  8          5           3.4 setosa 
+##  9          4.4         2.9 setosa 
+## 10          4.9         3.1 setosa 
+## # … with 140 more rows</code></pre>
+<p>Autre façon de faire, est de selectionner un enseble de colonnes en indiquant la première et la dernière avec les :</p>
+<pre class="r"><code>select(iris, Sepal.Length :Petal.Length)</code></pre>
+<pre><code>## # A tibble: 150 x 3
+##    Sepal.Length Sepal.Width Petal.Length
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;
+##  1          5.1         3.5          1.4
+##  2          4.9         3            1.4
+##  3          4.7         3.2          1.3
+##  4          4.6         3.1          1.5
+##  5          5           3.6          1.4
+##  6          5.4         3.9          1.7
+##  7          4.6         3.4          1.4
+##  8          5           3.4          1.5
+##  9          4.4         2.9          1.4
+## 10          4.9         3.1          1.5
+## # … with 140 more rows</code></pre>
+<p>Comme nous l’avions vu précédemment, si on veut faire des stat sur des valeurs quantitatives, il est préférable de supprimer les colonnes qualitatives.
+Rien d’aussi simple avec select, il suffut de mettre un - avant le nom de la colonne.</p>
+<pre class="r"><code>select(iris, -Species)</code></pre>
+<pre><code>## # A tibble: 150 x 4
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+##  1          5.1         3.5          1.4         0.2
+##  2          4.9         3            1.4         0.2
+##  3          4.7         3.2          1.3         0.2
+##  4          4.6         3.1          1.5         0.2
+##  5          5           3.6          1.4         0.2
+##  6          5.4         3.9          1.7         0.4
+##  7          4.6         3.4          1.4         0.3
+##  8          5           3.4          1.5         0.2
+##  9          4.4         2.9          1.4         0.2
+## 10          4.9         3.1          1.5         0.1
+## # … with 140 more rows</code></pre>
+<p>Si l’on souhaite selectionner des colonnes qui commencent par exemple avec le mot “Sepal”</p>
+<pre class="r"><code>select(iris, starts_with(&quot;Sepal&quot;))</code></pre>
+<pre><code>## # A tibble: 150 x 2
+##    Sepal.Length Sepal.Width
+##           &lt;dbl&gt;       &lt;dbl&gt;
+##  1          5.1         3.5
+##  2          4.9         3  
+##  3          4.7         3.2
+##  4          4.6         3.1
+##  5          5           3.6
+##  6          5.4         3.9
+##  7          4.6         3.4
+##  8          5           3.4
+##  9          4.4         2.9
+## 10          4.9         3.1
+## # … with 140 more rows</code></pre>
+<p>Maintenant, les colonnes qui se terminent avec la chaine de caractère “Width”</p>
+<pre class="r"><code>select(iris, ends_with(&quot;Width&quot;))</code></pre>
+<pre><code>## # A tibble: 150 x 2
+##    Sepal.Width Petal.Width
+##          &lt;dbl&gt;       &lt;dbl&gt;
+##  1         3.5         0.2
+##  2         3           0.2
+##  3         3.2         0.2
+##  4         3.1         0.2
+##  5         3.6         0.2
+##  6         3.9         0.4
+##  7         3.4         0.3
+##  8         3.4         0.2
+##  9         2.9         0.2
+## 10         3.1         0.1
+## # … with 140 more rows</code></pre>
+<p>Si l’on souhaite des colonnes qui contiennent une certaine chaine de caractère.</p>
+<pre class="r"><code>select(iris, contains(&quot;al&quot;))</code></pre>
+<pre><code>## # A tibble: 150 x 4
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+##  1          5.1         3.5          1.4         0.2
+##  2          4.9         3            1.4         0.2
+##  3          4.7         3.2          1.3         0.2
+##  4          4.6         3.1          1.5         0.2
+##  5          5           3.6          1.4         0.2
+##  6          5.4         3.9          1.7         0.4
+##  7          4.6         3.4          1.4         0.3
+##  8          5           3.4          1.5         0.2
+##  9          4.4         2.9          1.4         0.2
+## 10          4.9         3.1          1.5         0.1
+## # … with 140 more rows</code></pre>
+</div>
+<div id="filter-filtrer-sur-les-individus." class="section level1">
+<h1>filter() : filtrer sur les individus.</h1>
+<p>Dans cette section nous allons explorer filter() avec laquelle nous pouvons filtrer sur les lignes (individus).</p>
+<p>Premier exemple concerne un filtre avec des Sepal.length &gt;=5 et Sepal.width &gt;=2</p>
+<pre class="r"><code>filter(iris, Sepal.Length &gt;=5, Sepal.Width&gt;=2)</code></pre>
+<pre><code>## # A tibble: 128 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          5           3.6          1.4         0.2 setosa 
+##  3          5.4         3.9          1.7         0.4 setosa 
+##  4          5           3.4          1.5         0.2 setosa 
+##  5          5.4         3.7          1.5         0.2 setosa 
+##  6          5.8         4            1.2         0.2 setosa 
+##  7          5.7         4.4          1.5         0.4 setosa 
+##  8          5.4         3.9          1.3         0.4 setosa 
+##  9          5.1         3.5          1.4         0.3 setosa 
+## 10          5.7         3.8          1.7         0.3 setosa 
+## # … with 118 more rows</code></pre>
+<p>Ici, il m’indique que j’ai bien 128 individus avec le filtre demandé.</p>
+<p>Deuxième exemple: c’est avec la fonction between où je suis capable de selectionner des individus qui sont compris entre 2 valeurs.</p>
+<pre class="r"><code>filter(iris, between(Sepal.Length,4,7))</code></pre>
+<pre><code>## # A tibble: 138 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## # … with 128 more rows</code></pre>
+<p>Autre façon de l’écrire également</p>
+<pre class="r"><code>filter(iris, Sepal.Length&gt;=4, Sepal.Length &lt;=7)</code></pre>
+<pre><code>## # A tibble: 138 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## # … with 128 more rows</code></pre>
+<p>Troisième exemple:
+Si l’on souhaite faire un filtre avec le type de données setosa.</p>
+<pre class="r"><code>filter(iris, Species==&quot;setosa&quot;)</code></pre>
+<pre><code>## # A tibble: 50 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## # … with 40 more rows</code></pre>
+<p>Si au contraire, on ne souhaite pas avoir le type setosa : on utilise l’opérateur différent !=</p>
+<pre class="r"><code>filter(iris, Species!=&quot;setosa&quot;)</code></pre>
+<pre><code>## # A tibble: 100 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species   
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;     
+##  1          7           3.2          4.7         1.4 versicolor
+##  2          6.4         3.2          4.5         1.5 versicolor
+##  3          6.9         3.1          4.9         1.5 versicolor
+##  4          5.5         2.3          4           1.3 versicolor
+##  5          6.5         2.8          4.6         1.5 versicolor
+##  6          5.7         2.8          4.5         1.3 versicolor
+##  7          6.3         3.3          4.7         1.6 versicolor
+##  8          4.9         2.4          3.3         1   versicolor
+##  9          6.6         2.9          4.6         1.3 versicolor
+## 10          5.2         2.7          3.9         1.4 versicolor
+## # … with 90 more rows</code></pre>
+<p>Toujours dans le filtre sur la modalité Species, nous allons retrouver l’opérateur %in% qui permet de selectionner les modalités souhaitées:</p>
+<pre class="r"><code>filter(iris, Species %in% c(&quot;setosa&quot;, &quot;virginica&quot;))</code></pre>
+<pre><code>## # A tibble: 100 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## # … with 90 more rows</code></pre>
+<p>autre façon de l’écrire avec l’opérateur | ou. C’est pour information,</p>
+<pre class="r"><code>filter(iris, (Species ==&quot;setosa&quot; | Species ==&quot;virginica&quot;))</code></pre>
+<pre><code>## # A tibble: 100 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## # … with 90 more rows</code></pre>
+<p>Comme vous avez constaté, si l’on souhaite faire des filtres sur une ou deux colonnes (ou plus) il faut toujours indiquer le nom des variables.
+Maintenant si on veut par exemple un filtre non pas sur une ou deux (ou plus de variables) mais bien toutes les variables.
+Nous allons donc introduire la fonction filter_all</p>
+<pre class="r"><code>filter_all(iris[,-5], any_vars(.&gt;4))</code></pre>
+<pre><code>## # A tibble: 150 x 4
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+##  1          5.1         3.5          1.4         0.2
+##  2          4.9         3            1.4         0.2
+##  3          4.7         3.2          1.3         0.2
+##  4          4.6         3.1          1.5         0.2
+##  5          5           3.6          1.4         0.2
+##  6          5.4         3.9          1.7         0.4
+##  7          4.6         3.4          1.4         0.3
+##  8          5           3.4          1.5         0.2
+##  9          4.4         2.9          1.4         0.2
+## 10          4.9         3.1          1.5         0.1
+## # … with 140 more rows</code></pre>
+<p>any_var() est l’équivalent de l’opérateur logique ou |.
+Reprenons la ligne précédente en utilisant l’opérateur où.</p>
+<pre class="r"><code>filter(iris, (Sepal.Length &gt;4 |Sepal.Width &gt;4 |Petal.Length&gt;4|Petal.Width &gt;4))</code></pre>
+<pre><code>## # A tibble: 150 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## # … with 140 more rows</code></pre>
+<p>Maintenant, si l’on veut avoir filtrer sur toutes les variables et selectionner que les individus avec des caractéristiques &gt; 4</p>
+<pre class="r"><code>filter_all(iris[,-5],all_vars(.&gt;4))</code></pre>
+<pre><code>## # A tibble: 0 x 4
+## # … with 4 variables: Sepal.Length &lt;dbl&gt;, Sepal.Width &lt;dbl&gt;,
+## #   Petal.Length &lt;dbl&gt;, Petal.Width &lt;dbl&gt;</code></pre>
+<p>Il n’ y aucun individus avec ces caractérisques. Cherchons dans ce cas des individus avec des modalités &gt;2</p>
+<pre class="r"><code>filter_all(iris[,-5],all_vars(.&gt;2))</code></pre>
+<pre><code>## # A tibble: 23 x 4
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+##  1          6.3         3.3          6           2.5
+##  2          7.1         3            5.9         2.1
+##  3          6.5         3            5.8         2.2
+##  4          7.6         3            6.6         2.1
+##  5          7.2         3.6          6.1         2.5
+##  6          6.8         3            5.5         2.1
+##  7          5.8         2.8          5.1         2.4
+##  8          6.4         3.2          5.3         2.3
+##  9          7.7         3.8          6.7         2.2
+## 10          7.7         2.6          6.9         2.3
+## # … with 13 more rows</code></pre>
+</div>
+<div id="lopérateur-pipe" class="section level1">
+<h1>L’opérateur Pipe %&gt;%</h1>
+<p>C’est une fonction ou verbe super puissant.
+Imaginer une locomotive de fonctions (ou verbes dans le langage du créateur du package dplyr) la sortie de la première est l’entrée de la seconde et ainsi de suite jusqu’à la dernière fonction du pipe. Commençons par un exemple simple
+Ici, iris %&gt;% indique le jeu de donnée qui est l’entrée de la fonction suivante select.</p>
+<pre class="r"><code>iris %&gt;%
+select(Sepal.Length, Sepal.Width, Species)</code></pre>
+<pre><code>## # A tibble: 150 x 3
+##    Sepal.Length Sepal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5 setosa 
+##  2          4.9         3   setosa 
+##  3          4.7         3.2 setosa 
+##  4          4.6         3.1 setosa 
+##  5          5           3.6 setosa 
+##  6          5.4         3.9 setosa 
+##  7          4.6         3.4 setosa 
+##  8          5           3.4 setosa 
+##  9          4.4         2.9 setosa 
+## 10          4.9         3.1 setosa 
+## # … with 140 more rows</code></pre>
+<p>Maintenant, nous souhaitons selectionner l’ensemble des varaibles de iris mais sans la colonne Species et ensuite appliquer un filtre sur les individus qui sont des caractéristiques &gt;2 .</p>
+<pre class="r"><code>iris %&gt;%
+select(-Species) %&gt;%
+filter_all(all_vars(.&gt;2))</code></pre>
+<pre><code>## # A tibble: 23 x 4
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+##  1          6.3         3.3          6           2.5
+##  2          7.1         3            5.9         2.1
+##  3          6.5         3            5.8         2.2
+##  4          7.6         3            6.6         2.1
+##  5          7.2         3.6          6.1         2.5
+##  6          6.8         3            5.5         2.1
+##  7          5.8         2.8          5.1         2.4
+##  8          6.4         3.2          5.3         2.3
+##  9          7.7         3.8          6.7         2.2
+## 10          7.7         2.6          6.9         2.3
+## # … with 13 more rows</code></pre>
+<p>Pas besoin d’indiquer les noms de jeu de données puisqu’il est en entrée de la première fonction.</p>
+</div>
+<div id="arrange-ordonner-des-valeurs-dans-un-tibble." class="section level1">
+<h1>Arrange : ordonner des valeurs dans un tibble.</h1>
+<p>Première façon d’ordonner une variable par exemple Sepal.Length</p>
+<pre class="r"><code>iris %&gt;%
+  arrange(Sepal.Length)</code></pre>
+<pre><code>## # A tibble: 150 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          4.3         3            1.1         0.1 setosa 
+##  2          4.4         2.9          1.4         0.2 setosa 
+##  3          4.4         3            1.3         0.2 setosa 
+##  4          4.4         3.2          1.3         0.2 setosa 
+##  5          4.5         2.3          1.3         0.3 setosa 
+##  6          4.6         3.1          1.5         0.2 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          4.6         3.6          1           0.2 setosa 
+##  9          4.6         3.2          1.4         0.2 setosa 
+## 10          4.7         3.2          1.3         0.2 setosa 
+## # … with 140 more rows</code></pre>
+<p>Si je souhaite l’odre décroissant sur la même variable :</p>
+<pre class="r"><code>iris %&gt;%
+  arrange(desc(Sepal.Length))</code></pre>
+<pre><code>## # A tibble: 150 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species  
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;    
+##  1          7.9         3.8          6.4         2   virginica
+##  2          7.7         3.8          6.7         2.2 virginica
+##  3          7.7         2.6          6.9         2.3 virginica
+##  4          7.7         2.8          6.7         2   virginica
+##  5          7.7         3            6.1         2.3 virginica
+##  6          7.6         3            6.6         2.1 virginica
+##  7          7.4         2.8          6.1         1.9 virginica
+##  8          7.3         2.9          6.3         1.8 virginica
+##  9          7.2         3.6          6.1         2.5 virginica
+## 10          7.2         3.2          6           1.8 virginica
+## # … with 140 more rows</code></pre>
+<p>Autres illustration avec arranges dans un pipe.</p>
+<pre class="r"><code>iris %&gt;%
+select(Sepal.Length, Sepal.Width, Species) %&gt;%
+filter(Species==&quot;setosa&quot;)%&gt;%
+arrange(Sepal.Length)</code></pre>
+<pre><code>## # A tibble: 50 x 3
+##    Sepal.Length Sepal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          4.3         3   setosa 
+##  2          4.4         2.9 setosa 
+##  3          4.4         3   setosa 
+##  4          4.4         3.2 setosa 
+##  5          4.5         2.3 setosa 
+##  6          4.6         3.1 setosa 
+##  7          4.6         3.4 setosa 
+##  8          4.6         3.6 setosa 
+##  9          4.6         3.2 setosa 
+## 10          4.7         3.2 setosa 
+## # … with 40 more rows</code></pre>
+</div>
+<div id="summarise-résumé-statistique-dun-vecteur-et-retourne-une-valeur." class="section level1">
+<h1>Summarise : résumé statistique d’un vecteur et retourne une valeur.</h1>
+<pre class="r"><code>iris%&gt;%
+  summarise(moyenne_sepal.length = mean(Sepal.Length))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   moyenne_sepal.length
+##                  &lt;dbl&gt;
+## 1                 5.84</code></pre>
+<p>Nous avons défini une nouvelle variable, moyenne_sepal.length qui reçoie la moyenne de la variable Sepal.Length.</p>
+<p>Autre, façon de faire :
+Ce que nous pouvons faire ici est calculer une moyenne, un min et un max et quantifier les individus avec la fonction n().</p>
+<pre class="r"><code>iris%&gt;%
+  summarise(moyenne_sepal.length = mean(Sepal.Length), minimum_sepal.length = min(Sepal.Length),maximum_sepal.length=max(Sepal.Length), total=n())</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##   moyenne_sepal.length minimum_sepal.length maximum_sepal.length total
+##                  &lt;dbl&gt;                &lt;dbl&gt;                &lt;dbl&gt; &lt;int&gt;
+## 1                 5.84                  4.3                  7.9   150</code></pre>
+<pre class="r"><code>iris%&gt;%
+  summarise(moyenne_sepal.length = mean(Sepal.Length), minimum_sepal.length = min(Sepal.Length),moyenne_petal.length = mean(Petal.Length), minimum_petal.length = min(Petal.Length))</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##   moyenne_sepal.len… minimum_sepal.len… moyenne_petal.le… minimum_petal.le…
+##                &lt;dbl&gt;              &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;
+## 1               5.84                4.3              3.76                 1</code></pre>
+<p>Cette façon d’écrire n’est pas pratique, imaginons que l’on a un jeu de données avec un nombre important de variables sur lequel nous voulons faire des statistiques.
+Pour se faire, nous allons introduire la fontion summarise_each</p>
+<pre class="r"><code>iris%&gt;%
+summarise_each(funs(mean, min), Petal.Length, Sepal.Length)</code></pre>
+<pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
+## Please use a list of either functions or lambdas: 
+## 
+##   # Simple named list: 
+##   list(mean = mean, median = median)
+## 
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+## This warning is displayed once per session.</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##   Petal.Length_mean Sepal.Length_mean Petal.Length_min Sepal.Length_min
+##               &lt;dbl&gt;             &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1              3.76              5.84                1              4.3</code></pre>
+</div>
+<div id="group_by-spliter-les-groupes-de-variables" class="section level1">
+<h1>group_by() spliter les groupes de variables</h1>
+<pre class="r"><code>iris %&gt;%
+  group_by(Species)%&gt;%
+   summarise(moyenne_sepal.length = mean(Sepal.Length), minimum_sepal.length = min(Sepal.Length),maximum_sepal.length=max(Sepal.Length), total=n())</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   Species   moyenne_sepal.leng… minimum_sepal.len… maximum_sepal.len… total
+##   &lt;fct&gt;                   &lt;dbl&gt;              &lt;dbl&gt;              &lt;dbl&gt; &lt;int&gt;
+## 1 setosa                   5.01                4.3                5.8    50
+## 2 versicol…                5.94                4.9                7      50
+## 3 virginica                6.59                4.9                7.9    50</code></pre>
+<pre class="r"><code>iris %&gt;%
+  group_by(Species)%&gt;%
+   summarise_each(funs(mean, min, max), Petal.Length, Sepal.Length)</code></pre>
+<pre><code>## # A tibble: 3 x 7
+##   Species Petal.Length_me… Sepal.Length_me… Petal.Length_min
+##   &lt;fct&gt;              &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1 setosa              1.46             5.01              1  
+## 2 versic…             4.26             5.94              3  
+## 3 virgin…             5.55             6.59              4.5
+## # … with 3 more variables: Sepal.Length_min &lt;dbl&gt;, Petal.Length_max &lt;dbl&gt;,
+## #   Sepal.Length_max &lt;dbl&gt;</code></pre>
+<pre class="r"><code>iris %&gt;%
+   group_by(Species)%&gt;%
+  filter(Petal.Length&gt;5) %&gt;%
+  summarise(n())</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   Species    `n()`
+##   &lt;fct&gt;      &lt;int&gt;
+## 1 versicolor     1
+## 2 virginica     41</code></pre>
+</div>
+<div id="mutate-ajouter-supprimer-modifier-des-lignes-ou-des-colonnes" class="section level1">
+<h1>mutate() : Ajouter, supprimer, modifier des lignes ou des colonnes</h1>
+<p>Si on veut ajouter une plusieurs variables dans mon tableau iris.</p>
+<pre class="r"><code>iris%&gt;%
+  mutate(somme_longueur_largeur_Petal= Petal.Length+Petal.Width, somme_longueur_largeur_Sepal= Sepal.Width+Sepal.Length)</code></pre>
+<pre><code>## # A tibble: 150 x 7
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## # … with 140 more rows, and 2 more variables:
+## #   somme_longueur_largeur_Petal &lt;dbl&gt;, somme_longueur_largeur_Sepal &lt;dbl&gt;</code></pre>
+</div>
+<div id="supprimer-une-ou-deux-variables" class="section level1">
+<h1>Supprimer une ou deux variables</h1>
+<p>Imaginons que l’on souhaite supprimer la variable species</p>
+<pre class="r"><code>iris %&gt;%
+  mutate(Species=NULL)</code></pre>
+<pre><code>## # A tibble: 150 x 4
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+##  1          5.1         3.5          1.4         0.2
+##  2          4.9         3            1.4         0.2
+##  3          4.7         3.2          1.3         0.2
+##  4          4.6         3.1          1.5         0.2
+##  5          5           3.6          1.4         0.2
+##  6          5.4         3.9          1.7         0.4
+##  7          4.6         3.4          1.4         0.3
+##  8          5           3.4          1.5         0.2
+##  9          4.4         2.9          1.4         0.2
+## 10          4.9         3.1          1.5         0.1
+## # … with 140 more rows</code></pre>
+</div>
+<div id="modifier-les-valeurs-dune-variable" class="section level1">
+<h1>modifier les valeurs d’une variable</h1>
+<pre class="r"><code>iris %&gt;%
+  mutate(Sepal.Length= Sepal.Length*2)</code></pre>
+<pre><code>## # A tibble: 150 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1         10.2         3.5          1.4         0.2 setosa 
+##  2          9.8         3            1.4         0.2 setosa 
+##  3          9.4         3.2          1.3         0.2 setosa 
+##  4          9.2         3.1          1.5         0.2 setosa 
+##  5         10           3.6          1.4         0.2 setosa 
+##  6         10.8         3.9          1.7         0.4 setosa 
+##  7          9.2         3.4          1.4         0.3 setosa 
+##  8         10           3.4          1.5         0.2 setosa 
+##  9          8.8         2.9          1.4         0.2 setosa 
+## 10          9.8         3.1          1.5         0.1 setosa 
+## # … with 140 more rows</code></pre>
+</div>

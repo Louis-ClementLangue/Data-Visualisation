@@ -1,0 +1,23 @@
+---
+title: "Cours 2"
+author: "Louis-Clement Langue"
+date: 2019-09-16
+output: html_document
+---
+```{r}
+data("iris")
+```
+
+
+```{r}
+donnee_Iris=read.table("iris.csv", header = T, sep=",", row.names = 1) #row.names permet de très la premiére colonnes comme nom de lignes.
+View(donnee_Iris)
+donnee_Iris
+dim(donnee_Iris) #il y a 150 lignes
+```
+```{r}
+#visualisation des 4 premières variables 
+donnee_Iris[,1:4]
+head(donnee_Iris[,1:4])
+```
+

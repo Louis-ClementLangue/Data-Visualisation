@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.59.1" />
+
+
+<title>TP 4 - Data Visualisation</title>
+<meta property="og:title" content="TP 4 - Data Visualisation">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/rstudio/blogdown">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/rstudio">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">2 min read</span>
+    
+
+    <h1 class="article-title">TP 4</h1>
+
+    
+    <span class="article-date">2019-10-30</span>
+    
+
+    <div class="article-content">
+      
+
+
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attachement du package : &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>original = read.csv(&quot;original.csv&quot;,header = T, sep = &quot;,&quot;)</code></pre>
+<div id="exercice-1" class="section level1">
+<h1>Exercice 1</h1>
+<p>On cherche à trouver les 5 villes avec lez plus de fastfood</p>
+<p>On garde uniquement les deux colones qui nous intéressent à savoir le nom des fast food et leurs ville</p>
+<pre class="r"><code>neworiginal = select(original,name,city)</code></pre>
+<p>On crée une nouvelle table contenant chaque ville et son nombre de fast food</p>
+<pre class="r"><code>listefstfood = neworiginal %&gt;% group_by(city) %&gt;% summarise(nbfastfood = length(name))</code></pre>
+<p>On trie cette table dans l’ordre decroissant</p>
+<pre class="r"><code>listefstfood = listefstfood[order(-listefstfood$nbfastfood),]</code></pre>
+<p>On prend les 5 premiers elements</p>
+<pre class="r"><code>listefstfoodmax = listefstfood %&gt;% slice(1:5)
+listefstfoodmax</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   city       nbfastfood
+##   &lt;fct&gt;           &lt;int&gt;
+## 1 Cincinnati        119
+## 2 Las Vegas          72
+## 3 Houston            63
+## 4 Miami              58
+## 5 Denver             52</code></pre>
+</div>
+<div id="exercice-2" class="section level1">
+<h1>Exercice 2</h1>
+<p>On cheche à trouver quelle fastfood est le plus present</p>
+<p>On crée une nouvelle table contenant chaque nom de fast food et son nombre</p>
+<pre class="r"><code>listenamefastfood = original %&gt;% group_by(name) %&gt;% summarise(nbfastfood = length(name))</code></pre>
+<p>On trie cette table dans l’ordre decroissant</p>
+<pre class="r"><code>listenamefastfood = listenamefastfood[order(-listenamefastfood$nbfastfood),]</code></pre>
+<p>On prend les 5 premiers elements</p>
+<pre class="r"><code>listenamefastfoodmax = listenamefastfood %&gt;% slice(1:5)
+listenamefastfoodmax</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   name        nbfastfood
+##   &lt;fct&gt;            &lt;int&gt;
+## 1 McDonald&#39;s        1886
+## 2 Burger King       1154
+## 3 Taco Bell          873
+## 4 Wendy&#39;s            731
+## 5 Arby&#39;s             518</code></pre>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
