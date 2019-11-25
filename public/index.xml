@@ -6,10 +6,20 @@
     <description>Recent content on Data Visualisation</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 25 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>DS</title>
+      <link>/2019/11/25/ds/</link>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/11/25/ds/</guid>
+      <description>On commence par importer notre jeu de données
+data = read.csv(&amp;quot;VoitureDS.csv&amp;quot;,header = T, sep = &amp;quot;;&amp;quot;) library(dplyr) ## ## Attachement du package : &amp;#39;dplyr&amp;#39; ## The following objects are masked from &amp;#39;package:stats&amp;#39;: ## ## filter, lag ## The following objects are masked from &amp;#39;package:base&amp;#39;: ## ## intersect, setdiff, setequal, union library(ggplot2) Présentation de la donnée 1 summary(data) ## manufacturer model displ year ## dodge :37 caravan 2wd : 11 Min.</description>
+    </item>
     
     <item>
       <title>TP 4</title>

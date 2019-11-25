@@ -1,0 +1,90 @@
+---
+title: "DS"
+author: "Louis-Clement Langue"
+date: 2019-11-25
+output: html_document
+---
+
+On commence par importer notre jeu de données
+```{r}
+data = read.csv("VoitureDS.csv",header = T, sep = ";")
+library(dplyr)
+library(ggplot2)
+```
+
+# Présentation de la donnée
+
+## 1
+
+```{r}
+summary(data)
+str(data)
+```
+On peut dire qu'il y a 234 véhicules mentionées contenat 11  caractéristiques, cependant nous observons quelques données en "NA", c'est à dire qu'un nettoyage sera nécessaire pour interpréter correctement les informations présentes dans ce jeu de données 
+
+## 2
+
+```{r}
+filter(data, between(year, 1999 , 2008))
+```
+On a donc 227 véhicules fabriquées entre  2008 et 1999
+
+# Nettoyage de données
+
+##  1
+
+```{r}
+newData = data
+newData$year[is.na(newData$year)]<-1999
+newData
+```
+
+## 2
+
+```{r}
+newData$fl<-gsub("\\$", "r", newData$fl)
+newData
+```
+
+## 3
+
+```{r}
+newData$hwy<-gsub("\\%", 17, newData$hwy)
+newData$hwy<-as.numeric(newData$hwy)
+newData
+```
+
+## 4 
+
+```{r}
+newData<- newData[!is.na(newData$manufacturer),]
+```
+
+# Représentation graphique 
+
+Dans cette exercice nous tracerons les graphe du tableau nettoyé newData
+
+## 1
+
+```{r}
+newData$drv<-as.character(newData$drv)
+p<-ggplot(data=newData)+ aes(x= displ, y= hwy)+ geom_point()
+p
+```
+
+## 2
+
+```{r}
+p2 <- ggplot(newData, aes(displ, hwy, colour = class,)) + geom_point()+ facet_grid(vars(drv))
+p2
+```
+
+## 3
+
+```{r}
+p3<-ggplot(data=newData)+ geom_point(aes(x= displ, y= hwy, colour = drv)) + geom_smooth(fill= NA,aes(x= displ, y= hwy))
+p3
+```
+
+#  Bonus
+Ce Tp est mis en ligne avec Hugo (c'est plus jolie et facile à lire !)
