@@ -88,3 +88,4 @@ p3
 
 #  Bonus
 Ce Tp est mis en ligne avec Hugo (c'est plus jolie et facile à lire !)
+https://langue-data-visualisation.netlify.com/2019/11/25/ds/
